@@ -5,12 +5,34 @@ function pair_plot(context)
     add_plot(context; 
         file = "pair_plot.svg", 
         title = "Pair plot", 
+        movie = moving_pair_plot(context),
         description = """
             Diagonal entries show estimates of the marginal 
             densities as well as the (0.16, 0.5, 0.84) quantiles. 
-            Off-diagonal entries, estimates of the pairwise 
+            Off-diagonal entries whow estimates of the pairwise 
             densities. 
+
+            Movie linked below (🍿) superimposes 
+            $(moving_pair_plot_iters(context)) iterations 
+            of MCMC.
             """)
+end
+
+moving_pair_plot_iters(context) = min(size(context.chains)[1], context.options.max_moving_plot_iters)
+function moving_pair_plot(context)
+    mcmc_chains = context.chains
+    n = filter(x -> x != :log_density, names(mcmc_chains)) 
+    fig = Figure(size=(800,800))
+    framerate = 10
+    iters = range(1, moving_pair_plot_iters(context))
+    file_output = "moving_pair.mp4"
+    record(fig, "$(context.output_directory)/$file_output", iters; framerate) do t
+        empty!(fig)
+        pairplot(fig[1,1], mcmc_chains, 
+            current_position(mcmc_chains, n, t, 1) 
+        )
+    end
+    return file_output
 end
 
 function pigeons_summary(context)
@@ -65,3 +87,15 @@ function trace_plot(context, cumulative)
         file = "$name.svg", 
         title = cumulative ? "Cumulative traces" : "Trace plots")
 end
+
+function pigeons_inputs(context) 
+    dict = as_dict(context.pt.inputs) 
+    dict[:exec_folder] = string(pt.exec_folder)
+    add_table(context; 
+        table = dict,
+        title = "Pigeons inputs", 
+        alignment = [:r, :l])
+end
+
+
+

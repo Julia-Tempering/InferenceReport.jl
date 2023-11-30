@@ -28,3 +28,21 @@ function open_in_default_browser(url::AbstractString)::Bool
         return false
     end
 end
+
+function as_dict(object) 
+    result = Dict{Symbol,String}()
+    for f in fieldnames(typeof(object)) 
+        result[f] = string(getfield(object, f))
+    end
+    return result
+end
+
+function current_position(sample_array, names, iteration_index::Int, chain_index::Int) 
+    tuple_keys = Symbol[]
+    tuple_values = Float64[]
+    for i in eachindex(names)
+        push!(tuple_keys,   names[i])
+        push!(tuple_values, sample_array[iteration_index, i, chain_index])
+    end
+    return PairPlots.Truth((; zip(tuple_keys, tuple_values)...))
+end

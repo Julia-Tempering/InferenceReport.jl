@@ -13,9 +13,21 @@ using MCMCChains
 using CSV
 using Serialization
 
+# TODO remove StanBridge, DynamicPPL from deps!
+
 import Pigeons: @auto
 
-include("PostprocessorContext.jl")
+@kwdef struct ReportOptions 
+    max_moving_plot_iters::Int = 100
+end
+
+@auto struct PostprocessContext 
+    pt
+    output_directory 
+    chains
+    generated_markdown
+    options
+end
 
 ## API for users
 
@@ -25,24 +37,24 @@ default_postprocessors() = [
     trace_plot_cumulative,  
     moments,
     pigeons_summary,
+    pigeons_inputs,
 ]
 
-# TODO: add global options for e.g. file types
-
-function postprocess(postprocessor, context) end
-
 function report(
-        pt::PT;
-        view = true,
-        target_name = string(pt.inputs.target),
-        save_reproducibility_info = true,
-        postprocessors = default_postprocessors(), 
-        exec_folder::String = Pigeons.next_exec_folder()) 
+            pt::PT;
+            view = true,
+            target_name = string(pt.inputs.target),
+            save_reproducibility_info = true,
+            postprocessors = default_postprocessors(), 
+            exec_folder::String = Pigeons.next_exec_folder(),
+            options = ReportOptions()) 
     src_dir = mkpath("$exec_folder/src")
-    context = PostprocessContext(pt, src_dir, Chains(pt), [])
+    context = PostprocessContext(pt, src_dir, Chains(pt), [], options)
     add_top_title(context; title = target_name)
     for postprocessor in postprocessors 
+        print("$postprocessor...")
         postprocessor(context)
+        println(" ✓")
     end
     write(output_file(context, "posterior", "md"), join(context.generated_markdown, "\n"))
     render(context)
@@ -71,5 +83,6 @@ include("utils.jl")
 include("processors.jl")
 
 
-pt = pigeons(target = toy_mvn_target(4), record = [traces; record_default()])
+pt = pigeons(target = toy_mvn_target(3), 
+    record = [traces; record_default()])
 report(pt)

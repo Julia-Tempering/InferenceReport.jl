@@ -46,7 +46,6 @@ c = Chains(pt)
 
 function moving_pair_plot(mcmc_chains)
     n = filter(x -> x != :log_density, names(mcmc_chains)) 
-    
     fig = Figure(size=(800,800))
     framerate = 10
     iters = range(1, 1000)
