@@ -7,18 +7,27 @@ function add_table(context; table, title, kw_pretty_table_args...)
     CSV.write(output_file(context, title, "csv"), table)
     markdown_table = 
         pretty_table(String, table; backend = Val(:markdown), show_subheader=false, kw_pretty_table_args...)
-    add_markdown(context; title, contents = markdown_table)
+    add_markdown(context; 
+        title, 
+        contents = 
+            """
+            $markdown_table 
+
+            ```@raw html
+            <a href="../$(file_name(title, "csv"))">💾 CSV</a>
+            ```
+            """)
 end
 
 function add_plot(context; file, title, description = "", movie = nothing)
-    movie_link = isnothing(movie) ? "" : """<a href="../$movie">🍿</a>"""
+    movie_link = isnothing(movie) ? "" : """⏐<a href="../$movie">🍿 Movie </a>"""
     add_markdown(context; 
         title, 
         contents = """
             $description
             ```@raw html
             <iframe src="../$file" style="height:500px;width:100%;"></iframe>
-            <a href="../$file">🔍</a> $movie_link
+            <a href="../$file"> 🔍 Full page </a> $movie_link
             ```
             """
     )

@@ -19,52 +19,69 @@ import Pigeons: @auto
 
 @kwdef struct ReportOptions 
     max_moving_plot_iters::Int = 100
+    target_name::String = "" 
+    view::Bool = true 
+    postprocessors::Vector = default_postprocessors()
+    exec_folder::String = Pigeons.next_exec_folder()
 end
 
+@auto struct Posterior 
+    algorithm 
+    chains 
+end
+# TODO: constant-memory variants?
+Posterior(algorithm) = Posterior(algorithm, Chains(algorithm))
+Posterior(chains::Chains) = Posterior(nothing, chains)
+
 @auto struct PostprocessContext 
-    pt
+    posterior
     output_directory 
-    chains
     generated_markdown
     options
 end
 
+get_pt(context::PostprocessContext) = get_pt(context.posterior.algorithm) 
+get_pt(unknown_algo) = error("only applies to Pigeons")
+get_pt(pt::PT) = pt
+
+get_chains(context) = context.posterior.chains
+
 ## API for users
 
 default_postprocessors() = [
-    pair_plot,
-    trace_plot,   
+    target_title,
+    # pair_plot,
+    # trace_plot,   
     trace_plot_cumulative,  
     moments,
     pigeons_summary,
     pigeons_inputs,
 ]
 
-function report(
-            pt::PT;
-            view = true,
-            target_name = string(pt.inputs.target),
-            save_reproducibility_info = true,
-            postprocessors = default_postprocessors(), 
-            exec_folder::String = Pigeons.next_exec_folder(),
-            options = ReportOptions()) 
-    src_dir = mkpath("$exec_folder/src")
-    context = PostprocessContext(pt, src_dir, Chains(pt), [], options)
-    add_top_title(context; title = target_name)
-    for postprocessor in postprocessors 
+report(data; args...) = report(data, ReportOptions(args...))
+function report(data, options::ReportOptions) 
+    post = Posterior(data)
+
+    src_dir = mkpath("$(options.exec_folder)/src")
+    context = PostprocessContext(post, src_dir, [], options)
+
+    for postprocessor in options.postprocessors 
         print("$postprocessor...")
-        postprocessor(context)
-        println(" ✓")
+        try
+            postprocessor(context)
+            println(" ✓")
+        catch e 
+            println("[skipped: $(e.msg)]")
+        end
     end
+
     write(output_file(context, "posterior", "md"), join(context.generated_markdown, "\n"))
     render(context)
-    if view 
-        view_webpage(exec_folder)
+    if options.view 
+        view_webpage(options.exec_folder)
     end
-    if save_reproducibility_info 
-        serialize("$exec_folder/Inputs.jls", pt.inputs)
-    end
-    return exec_folder
+
+    return options.exec_folder
 end
 
 view_webpage(exec_folder) = open_in_default_browser("$exec_folder/build/posterior/index.html")
@@ -84,5 +101,9 @@ include("processors.jl")
 
 
 pt = pigeons(target = toy_mvn_target(3), 
+    n_rounds = 4,
     record = [traces; record_default()])
+
+report(Chains(pt))
+
 report(pt)

@@ -1,5 +1,7 @@
+target_title(context) = add_top_title(context; title = context.options.target_name)
+
 function pair_plot(context)
-    plot = PairPlots.pairplot(context.chains) 
+    plot = PairPlots.pairplot(get_chains(context)) 
     file = output_file(context, "pair_plot", "svg")
     CairoMakie.save(file, plot)
     add_plot(context; 
@@ -8,19 +10,20 @@ function pair_plot(context)
         movie = moving_pair_plot(context),
         description = """
             Diagonal entries show estimates of the marginal 
-            densities as well as the (0.16, 0.5, 0.84) quantiles. 
-            Off-diagonal entries whow estimates of the pairwise 
+            densities as well as the (0.16, 0.5, 0.84) 
+            quantiles (dotted lines). 
+            Off-diagonal entries show estimates of the pairwise 
             densities. 
 
             Movie linked below (🍿) superimposes 
             $(moving_pair_plot_iters(context)) iterations 
-            of MCMC.
+            of MCMC. 
             """)
 end
 
-moving_pair_plot_iters(context) = min(size(context.chains)[1], context.options.max_moving_plot_iters)
+moving_pair_plot_iters(context) = min(size(get_chains(context))[1], context.options.max_moving_plot_iters)
 function moving_pair_plot(context)
-    mcmc_chains = context.chains
+    mcmc_chains = get_chains(context)
     n = filter(x -> x != :log_density, names(mcmc_chains)) 
     fig = Figure(size=(800,800))
     framerate = 10
@@ -36,14 +39,14 @@ function moving_pair_plot(context)
 end
 
 function pigeons_summary(context)
-    summary = context.pt.shared.reports.summary
+    summary = get_pt(context).shared.reports.summary
     add_table(context; 
         table = summary, 
         title = "Pigeons summary")
 end
 
 function moments(context)
-    summary = summarize(context.chains) 
+    summary = summarize(get_chains(context)) 
     add_table(context; 
         table = summary, 
         title = "Moments")
@@ -54,7 +57,7 @@ trace_plot(context) = trace_plot(context, false)
 function trace_plot(context, cumulative)
 
     # from MCMCChains doc: 
-    chns = context.chains
+    chns = get_chains(context)
     params = names(chns, :parameters)
 
     n_chains = length(chains(chns))
@@ -89,7 +92,7 @@ function trace_plot(context, cumulative)
 end
 
 function pigeons_inputs(context) 
-    dict = as_dict(context.pt.inputs) 
+    dict = as_dict(get_pt(context).inputs) 
     dict[:exec_folder] = string(pt.exec_folder)
     add_table(context; 
         table = dict,
@@ -97,5 +100,27 @@ function pigeons_inputs(context)
         alignment = [:r, :l])
 end
 
+function reproducibility_info(context)
 
+    #=
+    First, collect required info 
+    - target_name (TODO: refactor options? NO - for later)
+    - remote repo (use Documenter.jl)
+    - this exec 
+    - julia cmd producing input <--- only additiona bit needed by user 
+    - env path
 
+    Then do 2 things with that: 
+    - test the input match
+    - create a section in the page with:
+        - clone line 
+        - activate / instantiate 
+        - using Pigeons 
+        - inputs = [...] 
+        - pt = pigeons(input) 
+        - using PosteriorCuratorBot
+        - report(pt)
+    - JSON to be consumed by Museum
+    =#
+
+end
