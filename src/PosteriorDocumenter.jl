@@ -19,10 +19,11 @@ import Pigeons: @auto
 
 @kwdef struct ReportOptions 
     max_moving_plot_iters::Int = 100
-    target_name::String = "" 
+    target_name::Union{String, Nothing} = nothing
     view::Bool = true 
     postprocessors::Vector = default_postprocessors()
     exec_folder::String = Pigeons.next_exec_folder()
+    reproducibility_command::Union{String, Nothing} = nothing
 end
 
 @auto struct Posterior 
@@ -40,30 +41,34 @@ Posterior(chains::Chains) = Posterior(nothing, chains)
     options
 end
 
+target_name(context::PostprocessContext) = target_name(context.options.target_name, context.algorithm) 
+target_name(unspecified_name::Nothing, pt::PT) = string(pt.inputs.target)
+target_name(unspecified_name::Nothing, _) = "UntitledPosterior" 
+target_name(specified_name::String, _) = specified_name 
+
 get_pt(context::PostprocessContext) = get_pt(context.posterior.algorithm) 
 get_pt(unknown_algo) = error("only applies to Pigeons")
 get_pt(pt::PT) = pt
 
 get_chains(context) = context.posterior.chains
 
-## API for users
-
 default_postprocessors() = [
     target_title,
     # pair_plot,
     # trace_plot,   
+    reproducibility_info,
     trace_plot_cumulative,  
     moments,
     pigeons_summary,
     pigeons_inputs,
 ]
 
-report(data; args...) = report(data, ReportOptions(args...))
-function report(data, options::ReportOptions) 
-    post = Posterior(data)
+report(algo_or_chains; args...) = report(algo_or_chains, ReportOptions(; args...))
+function report(algo_or_chains, options::ReportOptions) 
+    posterior = Posterior(algo_or_chains)
 
     src_dir = mkpath("$(options.exec_folder)/src")
-    context = PostprocessContext(post, src_dir, [], options)
+    context = PostprocessContext(posterior, src_dir, [], options)
 
     for postprocessor in options.postprocessors 
         print("$postprocessor...")
@@ -100,10 +105,9 @@ include("utils.jl")
 include("processors.jl")
 
 
-pt = pigeons(target = toy_mvn_target(3), 
-    n_rounds = 4,
-    record = [traces; record_default()])
+inputs = include("../script.jl")
+pt = pigeons(inputs)
 
-report(Chains(pt))
+#report(Chains(pt))
 
-report(pt)
+report(pt, reproducibility_command = """include("script.jl")""")

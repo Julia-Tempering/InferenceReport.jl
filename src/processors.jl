@@ -1,4 +1,6 @@
-target_title(context) = add_top_title(context; title = context.options.target_name)
+target_title(context) = 
+    add_top_title(context; 
+        title = target_name(context))
 
 function pair_plot(context)
     plot = PairPlots.pairplot(get_chains(context)) 
@@ -101,26 +103,18 @@ function pigeons_inputs(context)
 end
 
 function reproducibility_info(context)
-
-    #=
-    First, collect required info 
-    - target_name (TODO: refactor options? NO - for later)
-    - remote repo (use Documenter.jl)
-    - this exec 
-    - julia cmd producing input <--- only additiona bit needed by user 
-    - env path
-
-    Then do 2 things with that: 
-    - test the input match
-    - create a section in the page with:
-        - clone line 
-        - activate / instantiate 
-        - using Pigeons 
-        - inputs = [...] 
-        - pt = pigeons(input) 
-        - using PosteriorCuratorBot
-        - report(pt)
-    - JSON to be consumed by Museum
-    =#
-
+    if isnothing(context.options.reproducibility_command)
+        error("missing reproducibility_command")
+    end
+    cmd = reproducibility_command(context, context.posterior.algorithm)
+    add_markdown(context; 
+        title = "Reproducibility",
+        contents = """
+        ```
+        $cmd
+        ```
+        """
+    )
 end
+
+
