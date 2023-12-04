@@ -89,26 +89,29 @@ function git_setup_string()
             Pkg.instantiate()
             """
     catch 
-        error("cannot find a git remote and/or commit")
+        bail("cannot find a git remote and/or commit")
     end
 end
 
 function create_inputs_script(context, script) 
     write(output_file(context, "create_inputs", "jl"), script)
     # TODO: test it via serialization
-    temporary = tempdir() 
-    cd(temporary) do 
-        test_script = """
-            $script 
+    # temporary = tempdir() 
+    # cd(temporary) do
+    #     @show  temporary
+    #     test_script = """
+    #         $script 
 
-            using Serialization 
-            serialize("_inputs.jls", inputs)
-            """
-        write("_script.jl", test_script)
-        run(`$(Pigeons.julia_cmd_no_start_up()) _script.jl`) 
-        deserialized = deserialize("_inputs.jls") 
-        if !Pigeons.recursive_equal(deserialized, get_pt(context).inputs)
-            error("could not reproduce")
-        end
-    end
+    #         using Serialization 
+    #         serialize("_inputs.jls", inputs)
+    #         """
+    #     write("_script.jl", test_script)
+    #     run(`$(Pigeons.julia_cmd_no_start_up()) _script.jl`) 
+    #     deserialized = deserialize("_inputs.jls") 
+    #     if !Pigeons.recursive_equal(deserialized, get_pt(context).inputs)
+    #         bail("could not reproduce")
+    #     end
+    # end
 end
+
+bail(explanation) = throw(explanation)

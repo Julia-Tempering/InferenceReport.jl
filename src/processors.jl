@@ -1,6 +1,6 @@
 target_title(context) = 
     add_top_title(context; 
-        title = target_name(context))
+        title = `$(target_name(context))`)
 
 function pair_plot(context)
     plot = PairPlots.pairplot(get_chains(context)) 
@@ -104,7 +104,7 @@ end
 
 function reproducibility_info(context)
     if isnothing(context.options.reproducibility_command)
-        error("missing reproducibility_command")
+        bail("missing reproducibility_command")
     end
     cmd = reproducibility_command(context, context.posterior.algorithm)
     add_markdown(context; 
@@ -117,4 +117,72 @@ function reproducibility_info(context)
     )
 end
 
+function mpi_standard_out(context) 
+    pt = get_pt(context)
+    output_folder = "$(pt.exec_folder)/1"
+    machine = 1
+    output_file_name = Pigeons.find_rank_file(output_folder, machine)
+    stdout_file = "$output_folder/$output_file_name/stdout"
+    if !isfile(stdout_file)
+        bail("no standard out file found (only on MPI at moment)")
+    end
+    stdout = read(stdout_file)
+    add_markdown(context; 
+        title = "Standard out",
+        contents = """
+        ```
+        $stdout
+        ```
+        """
+    )
+end
 
+logz_progress(context) = 
+    pigeons_progress(context; 
+        property = :stepping_stone, 
+        title = "Evidence estimation progress",
+        description = """
+            Estimate of the log normalization (computed using 
+            the stepping stone estimator) as a function of 
+            the adaptation round. 
+            """)
+
+gcb_progress(context) = 
+    pigeons_progress(context; 
+        property = :global_barrier, 
+        title = "GCB estimation progress",
+        description = """
+            Estimate of the Global Communication Barrier (GCB) 
+            as a function of 
+            the adaptation round. 
+            """)
+
+function round_trip_progress(context) 
+    pt = get_pt(context)
+    if !(Pigeons.round_trip in pt.inputs.record) 
+        bail("number restarts not recorded")
+    end
+    pigeons_progress(context; 
+        property = :n_tempered_restarts, 
+        title = "Round trips",
+        description = """
+            Number of tempered restarts  
+            as a function of 
+            the adaptation round. 
+            """)     
+end       
+
+function pigeons_progress(context; property, title, description)
+    pt = get_pt(context)
+    recipe = 
+        data(pt.shared.reports.summary) * 
+        mapping(:round, property) * 
+        visual(Lines)
+    plot = draw(recipe)
+    file = output_file(context, "$(property)_progress", "svg")
+    CairoMakie.save(file, plot)
+    add_plot(context; 
+        file = "$(property)_progress.svg", 
+        title, 
+        description)
+end

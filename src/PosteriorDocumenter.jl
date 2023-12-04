@@ -41,26 +41,33 @@ Posterior(chains::Chains) = Posterior(nothing, chains)
     options
 end
 
-target_name(context::PostprocessContext) = target_name(context.options.target_name, context.algorithm) 
-target_name(unspecified_name::Nothing, pt::PT) = string(pt.inputs.target)
+target_name(context::PostprocessContext) = target_name(context.options.target_name, context.posterior.algorithm) 
+target_name(unspecified_name::Nothing, pt::PT) = pigeons_target_name(pt.inputs.target)
+pigeons_target_name(target::TuringLogPotential) = string(target.model.f)
+pigeons_target_name(target) = string(target)
+
 target_name(unspecified_name::Nothing, _) = "UntitledPosterior" 
 target_name(specified_name::String, _) = specified_name 
 
 get_pt(context::PostprocessContext) = get_pt(context.posterior.algorithm) 
-get_pt(unknown_algo) = error("only applies to Pigeons")
+get_pt(unknown_algo) = bail("only applies to Pigeons")
 get_pt(pt::PT) = pt
 
 get_chains(context) = context.posterior.chains
 
 default_postprocessors() = [
     target_title,
-    # pair_plot,
-    # trace_plot,   
-    reproducibility_info,
-    trace_plot_cumulative,  
+    pair_plot,
+    trace_plot, 
     moments,
+    trace_plot_cumulative,    
+    mpi_standard_out,
+    gcb_progress,
+    logz_progress,
+    round_trip_progress,
     pigeons_summary,
     pigeons_inputs,
+    reproducibility_info,
 ]
 
 report(algo_or_chains; args...) = report(algo_or_chains, ReportOptions(; args...))
@@ -76,7 +83,7 @@ function report(algo_or_chains, options::ReportOptions)
             postprocessor(context)
             println(" ✓")
         catch e 
-            println("[skipped: $(e.msg)]")
+            println("[skipped: $e]")
         end
     end
 
@@ -97,7 +104,7 @@ render(context) =
         sitename = "PosteriorDocumenter",
         repo="https://github.com/Julia-Tempering/Pigeons.jl/blob/{commit}{path}#{line}",
         format = Documenter.HTML(),
-        pages = ["Posterior" => "posterior.md"])
+        pages = ["`$(target_name(context))`" => "posterior.md"])
 
 
 include("building_blocks.jl")
