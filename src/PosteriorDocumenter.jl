@@ -103,7 +103,7 @@ view_webpage(exec_folder) = open_in_default_browser("$exec_folder/build/posterio
 render(context) = 
     makedocs(;
         root = dirname(context.output_directory),
-        sitename = "PosteriorDocumenter",
+        sitename = "InferenceReport",
         repo="https://github.com/Julia-Tempering/Pigeons.jl/blob/{commit}{path}#{line}",
         format = Documenter.HTML(),
         pages = ["`$(target_name(context))`" => "posterior.md"])
