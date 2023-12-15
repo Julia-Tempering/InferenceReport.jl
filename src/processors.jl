@@ -1,7 +1,3 @@
-target_title(context) = 
-    add_top_title(context; 
-        title = `$(target_name(context))`)
-
 function pair_plot(context)
     plot = PairPlots.pairplot(get_chains(context)) 
     file = output_file(context, "pair_plot", "svg")

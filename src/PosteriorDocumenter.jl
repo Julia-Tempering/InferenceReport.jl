@@ -12,6 +12,7 @@ using PrettyTables
 using MCMCChains 
 using CSV
 using Serialization
+using AlgebraOfGraphics
 
 # TODO remove StanBridge, DynamicPPL from deps!
 
@@ -31,6 +32,7 @@ end
     chains 
 end
 # TODO: constant-memory variants?
+Posterior(result::Result{PT}) = Posterior(load(result))
 Posterior(algorithm) = Posterior(algorithm, Chains(algorithm))
 Posterior(chains::Chains) = Posterior(nothing, chains)
 
@@ -42,12 +44,13 @@ Posterior(chains::Chains) = Posterior(nothing, chains)
 end
 
 target_name(context::PostprocessContext) = target_name(context.options.target_name, context.posterior.algorithm) 
-target_name(unspecified_name::Nothing, pt::PT) = pigeons_target_name(pt.inputs.target)
-pigeons_target_name(target::TuringLogPotential) = string(target.model.f)
-pigeons_target_name(target) = string(target)
 
+target_name(unspecified_name::Nothing, pt::PT) = pigeons_target_name(pt.inputs.target)
 target_name(unspecified_name::Nothing, _) = "UntitledPosterior" 
 target_name(specified_name::String, _) = specified_name 
+
+pigeons_target_name(target::TuringLogPotential) = string(target.model.f)
+pigeons_target_name(target) = string(target)
 
 get_pt(context::PostprocessContext) = get_pt(context.posterior.algorithm) 
 get_pt(unknown_algo) = bail("only applies to Pigeons")
@@ -56,7 +59,6 @@ get_pt(pt::PT) = pt
 get_chains(context) = context.posterior.chains
 
 default_postprocessors() = [
-    target_title,
     pair_plot,
     trace_plot, 
     moments,
@@ -112,9 +114,10 @@ include("utils.jl")
 include("processors.jl")
 
 
-inputs = include("../script.jl")
-pt = pigeons(inputs)
+model = "mRNA"
+inputs = include("../$model.jl")
+pt = pigeons(inputs) #, on = ChildProcess(n_local_mpi_processes = 10, n_threads = 1, dependencies = [BridgeStan]))
 
 #report(Chains(pt))
 
-report(pt, reproducibility_command = """include("script.jl")""")
+report(pt, reproducibility_command = """include("$model.jl")""")
