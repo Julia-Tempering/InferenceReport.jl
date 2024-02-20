@@ -89,7 +89,7 @@ function git_setup_string()
             Pkg.instantiate()
             """
     catch 
-        bail("cannot find a git remote and/or commit")
+        throw("cannot find a git remote and/or commit")
     end
 end
 
@@ -109,9 +109,8 @@ function create_inputs_script(context, script)
     #     run(`$(Pigeons.julia_cmd_no_start_up()) _script.jl`) 
     #     deserialized = deserialize("_inputs.jls") 
     #     if !Pigeons.recursive_equal(deserialized, get_pt(context).inputs)
-    #         bail("could not reproduce")
+    #         throw("could not reproduce")
     #     end
     # end
 end
 
-bail(explanation) = throw(explanation)

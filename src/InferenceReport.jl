@@ -1,5 +1,4 @@
-using Pkg 
-Pkg.activate(".")
+module InferenceReport
 
 using CairoMakie
 using Documenter
@@ -13,8 +12,6 @@ using MCMCChains
 using CSV
 using Serialization
 using AlgebraOfGraphics
-
-# TODO remove StanBridge, DynamicPPL from deps!
 
 import Pigeons: @auto
 
@@ -53,7 +50,7 @@ pigeons_target_name(target::TuringLogPotential) = string(target.model.f)
 pigeons_target_name(target) = string(target)
 
 get_pt(context::PostprocessContext) = get_pt(context.posterior.algorithm) 
-get_pt(unknown_algo) = bail("only applies to Pigeons")
+get_pt(unknown_algo) = throw("only applies to Pigeons")
 get_pt(pt::PT) = pt
 
 get_chains(context) = context.posterior.chains
@@ -69,7 +66,7 @@ default_postprocessors() = [
     round_trip_progress,
     pigeons_summary,
     pigeons_inputs,
-    reproducibility_info,
+    reproducibility_info
 ]
 
 report(algo_or_chains; args...) = report(algo_or_chains, ReportOptions(; args...))
@@ -113,11 +110,15 @@ include("building_blocks.jl")
 include("utils.jl")
 include("processors.jl")
 
+export report
 
-model = "mRNA"
-inputs = include("../$model.jl")
-pt = pigeons(inputs) #, on = ChildProcess(n_local_mpi_processes = 10, n_threads = 1, dependencies = [BridgeStan]))
+end # module
 
-#report(Chains(pt))
 
-report(pt, reproducibility_command = """include("$model.jl")""")
+# model = "SSM" # "Funnel" # "HorseShoe" # "mRNA"
+# inputs = include("../$model.jl")
+# pt = pigeons(inputs) #, on = ChildProcess(n_local_mpi_processes = 10, n_threads = 1, dependencies = [BridgeStan]))
+
+# #report(Chains(pt))
+
+# report(pt, reproducibility_command = """include("$model.jl")""", max_moving_plot_iters = 2)

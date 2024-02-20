@@ -100,7 +100,7 @@ end
 
 function reproducibility_info(context)
     if isnothing(context.options.reproducibility_command)
-        bail("missing reproducibility_command")
+        throw("missing reproducibility_command")
     end
     cmd = reproducibility_command(context, context.posterior.algorithm)
     add_markdown(context; 
@@ -120,7 +120,7 @@ function mpi_standard_out(context)
     output_file_name = Pigeons.find_rank_file(output_folder, machine)
     stdout_file = "$output_folder/$output_file_name/stdout"
     if !isfile(stdout_file)
-        bail("no standard out file found (only on MPI at moment)")
+        throw("no standard out file found (only on MPI at moment)")
     end
     stdout = read(stdout_file)
     add_markdown(context; 
@@ -156,7 +156,7 @@ gcb_progress(context) =
 function round_trip_progress(context) 
     pt = get_pt(context)
     if !(Pigeons.round_trip in pt.inputs.record) 
-        bail("number restarts not recorded")
+        throw("number restarts not recorded")
     end
     pigeons_progress(context; 
         property = :n_tempered_restarts, 
