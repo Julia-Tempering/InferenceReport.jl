@@ -19,6 +19,97 @@ using Pkg; Pkg.add("InferenceReport")
 ```
 
 
-## Basic usage
+## Usage
 
-TODO
+### From Pigeons
+
+First, run Parallel Tempering (PT) via [Pigeons](https://pigeons.run/dev/). 
+**Make sure to save the traces,** using the argument `record = [traces]`. 
+Then call `report()` on the PT struct:
+
+```@example pigeons
+using InferenceReport
+using Pigeons 
+
+pt = pigeons(
+        target = toy_mvn_target(2), 
+        record = [traces; round_trip; record_default()])
+
+report(pt) # hide
+```
+
+This will generate an HTML report with various useful diagnostic 
+plots and open it in your default browser. 
+
+See `Examples` in the left side bar to see examples of reports. 
+
+See [`report`](@ref) for more information on the options available. 
+
+
+### From MCMCChains 
+
+[MCMCChains.jl](https://github.com/TuringLang/MCMCChains.jl) is used 
+to store MCMC samples in packages such as [Turing.jl](https://github.com/TuringLang/Turing.jl). 
+
+```@example turing
+using InferenceReport
+using Turing 
+using MCMCChains
+
+# example from Turing.jl's webpage
+@model function coinflip(; N::Int)
+    p ~ Beta(1, 1)
+    y ~ filldist(Bernoulli(p), N)
+    return y
+end;
+
+y = Bool[1, 1, 1, 0, 0, 1]
+model = coinflip(; N=length(y)) | (; y)
+chain = sample(model, NUTS(), 1_000; progress=false)
+
+report(chain) # hide
+```
+
+
+## Adding postprocessors 
+
+Calling `report()` triggers a list of postprocessors, each creating a section 
+in the generated report. 
+
+To add a custom section in the report, first creating a function taking 
+as input the [`PostprocessContext`](@ref) which contains all 
+required information such as the MCMC traces. 
+
+Here is an example of postprocessor outputting the number of dimensions:
+
+```@example custom
+using InferenceReport
+import InferenceReport: default_postprocessors, add_table, add_plot, add_markdown
+
+function report_dim(context) 
+    chns = get_chains(context)
+    params = names(chns, :parameters)
+    n_params = length(params)
+    add_markdown(
+        title = "Dimension", 
+        contents = "The target has $n_params parameters."
+    )
+end
+```
+
+Various utilities are available to generate contents, 
+see for example [`add_table`](@ref), [`add_plot`](@ref), [`add_markdown`](@ref).
+
+Then, to use the custom postprocessor:
+
+```@example custom
+using Pigeons 
+
+pt = pigeons(
+        target = toy_mvn_target(2), 
+        record = [traces; round_trip; record_default()])
+
+report(pt; postprocessors = [report_dim; default_postprocessors()]) # hide
+```
+
+Pull requests for additional postprocessors are welcome. 

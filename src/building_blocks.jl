@@ -3,6 +3,9 @@ file_name(string, ext) = replace(string, r"[^A-Za-z]" => "_") * "." * ext
 
 add_top_title(context; title) = push!(context.generated_markdown, "# $title")
 
+"""
+$SIGNATURES
+"""
 function add_table(context; table, title, kw_pretty_table_args...) 
     CSV.write(output_file(context, title, "csv"), table)
     markdown_table = 
@@ -19,6 +22,9 @@ function add_table(context; table, title, kw_pretty_table_args...)
             """)
 end
 
+"""
+$SIGNATURES
+"""
 function add_plot(context; file, title, description = "", movie = nothing)
     movie_link = isnothing(movie) ? "" : """⏐<a href="../$movie">🍿 Movie </a>"""
     add_markdown(context; 
@@ -33,6 +39,9 @@ function add_plot(context; file, title, description = "", movie = nothing)
     )
 end
 
+"""
+$SIGNATURES
+"""
 function add_markdown(context; title, contents)
     markdown = """
     ## $title 

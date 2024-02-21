@@ -25,7 +25,7 @@ try
 catch 
 end
 
-n_rounds = 10
+n_rounds = 4
 unid = report_to_docs(
         pigeons(;
             target = Pigeons.toy_turing_unid_target(), 
@@ -68,7 +68,7 @@ makedocs(;
         size_threshold = nothing # overrides default size limit for a single html file
     ),
     pages=[
-        "Usage" => "index.md",
+        "User guide" => "index.md",
         "Examples" => [
             "Submanifold" => unid,
             "Funnel" => funnel,
