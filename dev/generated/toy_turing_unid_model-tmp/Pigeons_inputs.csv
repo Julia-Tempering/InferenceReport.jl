@@ -10,7 +10,7 @@ variational,nothing
 explorer,nothing
 n_chains_variational,0
 target,"TuringLogPotential{...}(Model{typeof(PigeonsDynamicPPLExt.toy_turing_unid_model), (:n_trials, :n_successes), (), (), Tuple{Int64, Int64}, Tuple{}, DefaultContext}(PigeonsDynamicPPLExt.toy_turing_unid_model, (n_trials = 100000, n_successes = 50000), NamedTuple(), DefaultContext()), false)"
-n_rounds,10
+n_rounds,4
 exec_folder,nothing
 reference,nothing
 checkpoint,false

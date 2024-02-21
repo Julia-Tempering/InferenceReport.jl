@@ -10,7 +10,7 @@ variational,nothing
 explorer,nothing
 n_chains_variational,0
 target,StanLogPotential(funnel_model)
-n_rounds,10
+n_rounds,4
 exec_folder,nothing
 reference,nothing
 checkpoint,false
