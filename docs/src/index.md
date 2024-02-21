@@ -84,13 +84,14 @@ Here is an example of postprocessor outputting the number of dimensions:
 
 ```@example custom
 using InferenceReport
-import InferenceReport: default_postprocessors, add_table, add_plot, add_markdown
+using MCMCChains
+import InferenceReport: get_chains, default_postprocessors, add_table, add_plot, add_markdown
 
 function report_dim(context) 
     chns = get_chains(context)
     params = names(chns, :parameters)
     n_params = length(params)
-    add_markdown(
+    add_markdown(context; 
         title = "Dimension", 
         contents = "The target has $n_params parameters."
     )
