@@ -18,13 +18,14 @@ end;
 y = Bool[1, 1, 1, 0, 0, 1]
 model = coinflip(; N=length(y)) | (; y)
 chain = sample(model, NUTS(), 1_000; progress=false)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"></code></pre><h2 id="Adding-postprocessors"><a class="docs-heading-anchor" href="#Adding-postprocessors">Adding postprocessors</a><a id="Adding-postprocessors-1"></a><a class="docs-heading-anchor-permalink" href="#Adding-postprocessors" title="Permalink"></a></h2><p>Calling <code>report()</code> triggers a list of postprocessors, each creating a section  in the generated report. </p><p>To add a custom section in the report, first creating a function taking  as input the <a href="reference/#InferenceReport.PostprocessContext"><code>PostprocessContext</code></a> which contains all  required information such as the MCMC traces. </p><p>Here is an example of postprocessor outputting the number of dimensions:</p><pre><code class="language-julia hljs">using InferenceReport
-import InferenceReport: default_postprocessors, add_table, add_plot, add_markdown
+using MCMCChains
+import InferenceReport: get_chains, default_postprocessors, add_table, add_plot, add_markdown
 
 function report_dim(context)
     chns = get_chains(context)
     params = names(chns, :parameters)
     n_params = length(params)
-    add_markdown(
+    add_markdown(context;
         title = &quot;Dimension&quot;,
         contents = &quot;The target has $n_params parameters.&quot;
     )
@@ -32,4 +33,4 @@ end</code></pre><pre class="documenter-example-output"><code class="nohighlight 
 
 pt = pigeons(
         target = toy_mvn_target(2),
-        record = [traces; round_trip; record_default()])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"></code></pre><p>Pull requests for additional postprocessors are welcome. </p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="generated/toy_turing_unid_model-tmp/inference/">Submanifold »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Wednesday 21 February 2024 18:24">Wednesday 21 February 2024</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+        record = [traces; round_trip; record_default()])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"></code></pre><p>Pull requests for additional postprocessors are welcome. </p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="generated/toy_turing_unid_model-tmp/inference/">Submanifold »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Wednesday 21 February 2024 23:32">Wednesday 21 February 2024</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
