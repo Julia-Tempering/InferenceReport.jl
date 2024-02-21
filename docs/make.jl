@@ -14,14 +14,24 @@ using Pigeons
 using InferenceReport
 using Documenter
 using DocStringExtensions
-using Plots
 
-# based on: https://github.com/JuliaPlots/PlotlyJS.jl/blob/master/docs/make.jl
-using PlotlyJS
-using PlotlyBase
-PlotlyJS.set_default_renderer(PlotlyJS.DOCS)
 
 DocMeta.setdocmeta!(InferenceReport, :DocTestSetup, :(using InferenceReport); recursive=true)
+
+unid = cd(script_dir) do
+    pt = pigeons(
+            target = Pigeons.toy_turing_unid_target(), 
+            n_rounds = 4, 
+            record = [traces; round_trip; record_default()])
+    r = report(pt; render = false) 
+    move_to_docs!(r, script_dir)
+end
+
+
+
+println(isfile("$unid"))
+
+
 
 makedocs(;
     modules=[InferenceReport],
@@ -38,10 +48,15 @@ makedocs(;
     ),
     pages=[
         "Usage" => "index.md",
+        "Example" => "$unid",
+        "Reference" => "reference.md",
     ],
 )
 
-rm(joinpath(script_dir, "build", "results"), recursive=true) # delete `results` folder before deploying
+try
+    rm(joinpath(script_dir, "build", "results"), recursive=true) # delete `results` folder before deploying
+catch 
+end
 
 deploydocs(;
     repo="github.com/Julia-Tempering/InferenceReport.jl",

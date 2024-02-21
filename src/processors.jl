@@ -1,3 +1,8 @@
+"""
+$SIGNATURES
+
+Create a pair plot using [PairPlot.jl](https://github.com/sefffal/PairPlots.jl).
+"""
 function pair_plot(context)
     plot = PairPlots.pairplot(get_chains(context)) 
     file = output_file(context, "pair_plot", "svg")
@@ -20,6 +25,12 @@ function pair_plot(context)
 end
 
 moving_pair_plot_iters(context) = min(size(get_chains(context))[1], context.options.max_moving_plot_iters)
+
+"""
+$SIGNATURES 
+
+A PairPlot movie showing the sample in the reference chain moving in the state space. 
+"""
 function moving_pair_plot(context)
     mcmc_chains = get_chains(context)
     n = filter(x -> x != :log_density, names(mcmc_chains)) 
@@ -36,6 +47,11 @@ function moving_pair_plot(context)
     return file_output
 end
 
+"""
+$SIGNATURES 
+
+The summary table produced by Pigeons during its execution. 
+"""
 function pigeons_summary(context)
     summary = get_pt(context).shared.reports.summary
     add_table(context; 
@@ -43,6 +59,11 @@ function pigeons_summary(context)
         title = "Pigeons summary")
 end
 
+"""
+$SIGNATURES 
+
+Table of means and variances. 
+"""
 function moments(context)
     summary = summarize(get_chains(context)) 
     add_table(context; 
@@ -50,7 +71,18 @@ function moments(context)
         title = "Moments")
 end
 
+"""
+$SIGNATURES 
+
+Cumulative averages as a function of iteration. 
+"""
 trace_plot_cumulative(context) = trace_plot(context, true)
+
+"""
+$SIGNATURES
+
+Trace plots. 
+"""
 trace_plot(context) = trace_plot(context, false)
 function trace_plot(context, cumulative)
 
@@ -89,6 +121,11 @@ function trace_plot(context, cumulative)
         title = cumulative ? "Cumulative traces" : "Trace plots")
 end
 
+"""
+$SIGNATURES 
+
+Table of inputs used in Pigeons. 
+"""
 function pigeons_inputs(context) 
     dict = as_dict(get_pt(context).inputs) 
     dict[:exec_folder] = string(pt.exec_folder)
@@ -98,11 +135,16 @@ function pigeons_inputs(context)
         alignment = [:r, :l])
 end
 
+"""
+$SIGNATURES 
+
+Generated reproducibility script. 
+"""
 function reproducibility_info(context)
     if isnothing(context.options.reproducibility_command)
         throw("missing reproducibility_command")
     end
-    cmd = reproducibility_command(context, context.posterior.algorithm)
+    cmd = reproducibility_command(context, context.inference.algorithm)
     add_markdown(context; 
         title = "Reproducibility",
         contents = """
@@ -113,6 +155,11 @@ function reproducibility_info(context)
     )
 end
 
+"""
+$SIGNATURES 
+
+MPI standard output. 
+"""
 function mpi_standard_out(context) 
     pt = get_pt(context)
     output_folder = "$(pt.exec_folder)/1"
@@ -133,6 +180,12 @@ function mpi_standard_out(context)
     )
 end
 
+"""
+$SIGNATURES 
+
+Progression of the log-normalization constant estimate as 
+a function of the round. 
+"""
 logz_progress(context) = 
     pigeons_progress(context; 
         property = :stepping_stone, 
@@ -143,6 +196,12 @@ logz_progress(context) =
             the adaptation round. 
             """)
 
+"""
+$SIGNATURES 
+
+Progression of the global communication barrier estimate as 
+a function of the round. 
+"""
 gcb_progress(context) = 
     pigeons_progress(context; 
         property = :global_barrier, 
@@ -153,6 +212,12 @@ gcb_progress(context) =
             the adaptation round. 
             """)
 
+"""
+$SIGNATURES 
+
+Progression of the number of round trips as 
+a function of the round. 
+"""
 function round_trip_progress(context) 
     pt = get_pt(context)
     if !(Pigeons.round_trip in pt.inputs.record) 

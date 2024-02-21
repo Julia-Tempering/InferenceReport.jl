@@ -1,5 +1,6 @@
 [deps]
 BridgeStan = "c88b6f0a-829e-4b0b-94b7-f06ab5908f5a"
 DynamicPPL = "366bfd00-2699-11ea-058f-f148b4cae6d8"
+InferenceReport = "e5554034-be14-491c-aa1c-9e5f4a9f7142"
 Pigeons = "0eb8d820-af6a-4919-95ae-11206f830c31"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
