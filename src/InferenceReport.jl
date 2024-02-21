@@ -119,6 +119,8 @@ $FIELDS
     options
 end
 
+Base.show(io::IO, c::PostprocessContext) = "PostprocessContext(output_directory = $(c.output_directory))"
+
 """
 $SIGNATURES 
 """

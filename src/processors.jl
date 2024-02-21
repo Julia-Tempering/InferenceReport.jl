@@ -127,7 +127,8 @@ $SIGNATURES
 Table of inputs used in Pigeons. 
 """
 function pigeons_inputs(context) 
-    dict = as_dict(get_pt(context).inputs) 
+    pt = get_pt(context)
+    dict = as_dict(pt.inputs) 
     dict[:exec_folder] = string(pt.exec_folder)
     add_table(context; 
         table = dict,
@@ -163,6 +164,9 @@ MPI standard output.
 function mpi_standard_out(context) 
     pt = get_pt(context)
     output_folder = "$(pt.exec_folder)/1"
+    if !isfile(output_folder)
+        throw("No MPI std out files found")
+    end
     machine = 1
     output_file_name = Pigeons.find_rank_file(output_folder, machine)
     stdout_file = "$output_folder/$output_file_name/stdout"

@@ -79,11 +79,6 @@ makedocs(;
     ],
 )
 
-try
-    rm(joinpath(script_dir, "build", "results"), recursive=true) # delete `results` folder before deploying
-catch 
-end
-
 deploydocs(;
     repo="github.com/Julia-Tempering/InferenceReport.jl",
     devbranch="main",
