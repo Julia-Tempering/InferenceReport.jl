@@ -14,24 +14,45 @@ using Pigeons
 using InferenceReport
 using Documenter
 using DocStringExtensions
+import InferenceReport: report_to_docs
 
 
 DocMeta.setdocmeta!(InferenceReport, :DocTestSetup, :(using InferenceReport); recursive=true)
 
-unid = cd(script_dir) do
-    pt = pigeons(
-            target = Pigeons.toy_turing_unid_target(), 
-            n_rounds = 4, 
-            record = [traces; round_trip; record_default()])
-    r = report(pt; render = false) 
-    move_to_docs!(r, script_dir)
+generated = "$script_dir/src/generated"
+try 
+    rm(generated, recursive=true)
+catch 
 end
 
+n_rounds = 10
+unid = report_to_docs(
+        pigeons(;
+            target = Pigeons.toy_turing_unid_target(), 
+            n_rounds, 
+            record = [traces; round_trip; record_default()]); 
+        doc_root = script_dir)
 
+funnel = report_to_docs(
+    pigeons(;
+        target = Pigeons.stan_funnel(2), 
+        n_rounds, 
+        record = [traces; round_trip; record_default()]); 
+    doc_root = script_dir)
 
-println(isfile("$unid"))
+banana = report_to_docs(
+    pigeons(;
+        target = Pigeons.stan_banana(2), 
+        n_rounds, 
+        record = [traces; round_trip; record_default()]); 
+    doc_root = script_dir)
 
-
+schools = report_to_docs(
+    pigeons(;
+        target = Pigeons.stan_eight_schools(), 
+        n_rounds, 
+        record = [traces; round_trip; record_default()]); 
+    doc_root = script_dir)
 
 makedocs(;
     modules=[InferenceReport],
@@ -48,7 +69,12 @@ makedocs(;
     ),
     pages=[
         "Usage" => "index.md",
-        "Example" => "$unid",
+        "Examples" => [
+            "Submanifold" => unid,
+            "Funnel" => funnel,
+            "Banana" => banana,
+            "8 schools" => schools
+        ],
         "Reference" => "reference.md",
     ],
 )

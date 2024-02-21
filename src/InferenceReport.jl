@@ -213,10 +213,20 @@ function report(algo_or_chains, options::ReportOptions)
 end
 
 """
-$SIGNATURES
+$SIGNATURES 
+
+Similar to [`report`](@ref) but as part of a larger documentation site. 
+
+Returns the correct relative path to the `.md` file to be passed to 
+the `pages` argument of [`makedocs`](https://documenter.juliadocs.org/stable/lib/public/#Documenter.makedocs).
 """
-function move_to_docs!(context, doc_root)
+function report_to_docs(algo_or_chains; doc_root::String, args...)
     @assert basename(doc_root) == "docs"
+    
+    context = report(algo_or_chains; 
+        render = false, 
+        exec_folder = tempdir(), 
+        args...)
 
     name = target_name(context) 
     output = context.output_directory
@@ -225,7 +235,7 @@ function move_to_docs!(context, doc_root)
     dest = "$doc_root/src/generated"
     mkpath(dest)
 
-    cp("$output", "$dest/$name-$id")
+    mv("$output", "$dest/$name-$id")
 
     return "generated/$name-$id/inference.md"
 end
@@ -245,6 +255,6 @@ include("building_blocks.jl")
 include("utils.jl")
 include("processors.jl")
 
-export report, move_to_docs!
+export report
 
 end # module
