@@ -13,9 +13,6 @@ using CSV
 using Serialization
 using AlgebraOfGraphics
 using DocStringExtensions
-using Dates
-using Random
-using SplittableRandoms
 import Pigeons: @auto
 
 include("ReportOptions.jl")
