@@ -191,7 +191,7 @@ $SIGNATURES
 function report(algo_or_chains, options::ReportOptions) 
     inference = Inference(algo_or_chains)
 
-    src_dir = mkpath("$(options.exec_folder)")
+    src_dir = mkpath("$(options.exec_folder)/src")
     context = PostprocessContext(inference, src_dir, String[], options)
 
     for postprocessor in options.postprocessors 
@@ -248,12 +248,12 @@ Pass to the `pages` argument of
 [`makedocs`](https://documenter.juliadocs.org/stable/lib/public/#Documenter.makedocs) 
 to properly include the generated page in the Documenter.jl navigation bar. 
 """
-as_doc_page(context) = "`$(target_name(context))`" => "generated/$(basename(context.output_directory))/index.md"
+as_doc_page(context) = "`$(target_name(context))`" => "generated/$(basename(dirname(context.output_directory)))/src/index.md"
 
 """
 $SIGNATURES 
 """
-view_webpage(exec_folder) = open_in_default_browser("$exec_folder/build/index/index.html")
+view_webpage(exec_folder) = open_in_default_browser("$exec_folder/build/index.html")
 
 """
 $SIGNATURES 
