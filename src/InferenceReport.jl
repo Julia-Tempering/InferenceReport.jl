@@ -152,10 +152,24 @@ function headless(lambda)
     end
 end
 
+"""
+$SIGNATURES 
+
+Returns a pair, where the first argument is 
+the provided expression verbatim, and the second, 
+the expression as a string to be used as the 
+`reproducibility_command` argument in [`report`](@ref) 
+and [`report_to_docs`](@ref).
+"""
+macro reproducible(lambda::Expr)
+    str = string(lambda)
+    return :($(esc(lambda)), $str)
+end
+
 include("building_blocks.jl")
 include("utils.jl")
 include("processors.jl")
 
-export report
+export report, @reproducible
 
 end # module

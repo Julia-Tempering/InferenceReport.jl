@@ -5,7 +5,7 @@ $FIELDS
 """
 @auto struct Inference 
     """ 
-    Detailed algorithm that created the samples (currently assumes 
+    Algorithm that created the samples (currently assumes 
     it is a [`PT`](https://pigeons.run/dev/reference/#Pigeons.PT) struct).
     Optional, nothing if unspecfied.
     """

@@ -24,41 +24,76 @@ try
 catch 
 end
 
-# decrease for quick debugging
-n_rounds = 10
+# use this to draft faster during doc dev
+skip_example = false
+
+function run_examples() 
+    if skip_example 
+        return [] 
+    else
+
+        # Unidentifiable example / concentration on sub-manifold
+        inputs, reproducibility_command = 
+            @reproducible Inputs(;
+                target = Pigeons.toy_turing_unid_target(), 
+                n_rounds = 10, 
+                record = [traces; round_trip; record_default()])
+        unid = report_to_docs(
+            pigeons(inputs);
+            reproducibility_command,
+            doc_root)
+
+        # Classic Neal's funnel example
+        inputs, reproducibility_command = 
+            @reproducible Inputs(;
+                target = Pigeons.stan_funnel(2), 
+                variational = GaussianReference(first_tuning_round = 5),
+                n_rounds = 10, 
+                record = [traces; round_trip; record_default()])
+        funnel = report_to_docs(
+            pigeons(inputs);
+            reproducibility_command,
+            doc_root)
+
+        # Banana distribution example
+        inputs, reproducibility_command = 
+            @reproducible Inputs(;
+                target = Pigeons.stan_banana(2), 
+                variational = GaussianReference(first_tuning_round = 5),
+                n_rounds = 10, 
+                record = [traces; round_trip; record_default()])
+        banana = report_to_docs(
+            pigeons(inputs);
+            reproducibility_command,
+            doc_root)
+
+        # 8 schools example (hard, non-reparameterized version)
+        inputs, reproducibility_command = 
+            @reproducible Inputs(;
+                target = Pigeons.stan_eight_schools(), 
+                variational = GaussianReference(first_tuning_round = 5),
+                n_rounds = 10, 
+                record = [traces; round_trip; record_default()])
+        schools = report_to_docs(
+            pigeons(inputs);
+            reproducibility_command,
+            doc_root)
+
+        # Return links suitable for the navigation bar
+        # i.e. passed into the `pages` argument of `makedocs`
+        return [
+            as_doc_page(unid),
+            as_doc_page(funnel),
+            as_doc_page(banana),
+            as_doc_page(schools),
+        ]
+
+    end
+end
 
 # enclose the following in headless() to avoid useless render and 
-# also to avoid the pages opening in the browser
+# also to avoid the pages opening in the browser when drafting
 headless() do
-
-    unid = report_to_docs(
-        pigeons(;
-            target = Pigeons.toy_turing_unid_target(), 
-            n_rounds, 
-            record = [traces; round_trip; record_default()]);
-        doc_root)
-
-    funnel = report_to_docs(
-        pigeons(;
-            target = Pigeons.stan_funnel(2), 
-            n_rounds, 
-            record = [traces; round_trip; record_default()]); 
-        doc_root)
-
-    banana = report_to_docs(
-        pigeons(;
-            target = Pigeons.stan_banana(2), 
-            n_rounds, 
-            record = [traces; round_trip; record_default()]); 
-        doc_root)
-
-    schools = report_to_docs(
-        pigeons(;
-            target = Pigeons.stan_eight_schools(), 
-            n_rounds, 
-            record = [traces; round_trip; record_default()]); 
-        doc_root)
-
     makedocs(;
         modules=[InferenceReport],
         authors="Miguel Biron-Lattes <miguel.biron@stat.ubc.ca>, Alexandre Bouchard-Côté <alexandre.bouchard@gmail.com>, Trevor Campbell <trevor@stat.ubc.ca>, Nikola Surjanovic <nikola.surjanovic@stat.ubc.ca>, Saifuddin Syed <saifuddin.syed@stats.ox.ac.uk>, Paul Tiede <ptiede91@gmail.com>",
@@ -74,12 +109,7 @@ headless() do
         ),
         pages=[
             "User guide" => "index.md",
-            "Examples" => [
-                as_doc_page(unid),
-                as_doc_page(funnel),
-                as_doc_page(banana),
-                as_doc_page(schools),
-            ],
+            "Examples" => run_examples(),
             "Reference" => "reference.md",
         ],
     )

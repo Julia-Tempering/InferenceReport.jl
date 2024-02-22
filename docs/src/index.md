@@ -11,7 +11,7 @@ CurrentModule = InferenceReport
 
 ## [Installing InferenceReport](@id installing-infer)
 
-1. If you have not done so, install [Julia](https://julialang.org/downloads/). Julia 1.8 and higher are supported. 
+1. If you have not done so, install [Julia](https://julialang.org/downloads/). Julia 1.9 and higher are supported. 
 2. Install `InferenceReport` using
 
 ```
@@ -24,7 +24,9 @@ using Pkg; Pkg.add("InferenceReport")
 ### From Pigeons
 
 First, run Parallel Tempering (PT) via [Pigeons](https://pigeons.run/dev/). 
+
 **Make sure to save the traces,** using the argument `record = [traces]`. 
+
 Then call `report()` on the PT struct:
 
 ```@example pigeons
@@ -74,12 +76,61 @@ nothing # hide
 ```
 
 
+## Reproducibility instructions 
+
+Simple Pigeons reproducibility instructions can be added to the generated page. 
+This is done via the `reproducibility_command` argument to [`report`](@ref). 
+This should be a string showing how to create an 
+[Inputs](https://pigeons.run/dev/reference/#Pigeons.Inputs) struct. 
+When `reproducibility_command` is provided, `InferenceReport` will 
+combine it to information queried in the current git repository to 
+attempt to string together a mini-script that can be used to reproduce the 
+result. 
+
+When the model is very simple, this can be done manually:
+
+```@example repro 
+using InferenceReport
+using Pigeons 
+
+inputs = Inputs(target = toy_mvn_target(1), n_rounds = 4, record = [traces])
+pt = pigeons(inputs)
+
+report(pt; 
+    reproducibility_command = "Inputs(target = toy_mvn_target(1), n_rounds = 4, record = [traces])") 
+
+nothing # hide
+```
+
+However, this approach is not recommended as the duplicated code leads to 
+high risk that the reproducibility instruction drifts apart from the actual 
+command used. 
+
+To avoid this, we provide a macro, `@reproducible`, which, given an expression, 
+produces a pair containing the verbatim expression as well as its string value. 
+Using this we can rewrite the above as:
+
+```@example macro 
+using InferenceReport
+using Pigeons 
+
+inputs, reproducibility_command = 
+        @reproducible Inputs(
+            target = toy_mvn_target(1), n_rounds = 4, record = [traces])
+pt = pigeons(inputs)
+
+report(pt; reproducibility_command) 
+
+nothing # hide
+```
+
+
 ## Adding postprocessors 
 
 Calling `report()` triggers a list of postprocessors, each creating a section 
 in the generated report. 
 
-To add a custom section in the report, first creating a function taking 
+To add a custom section in the report, first, create a function taking 
 as input the [`PostprocessContext`](@ref) which contains all 
 required information such as the MCMC traces. 
 
@@ -104,7 +155,8 @@ end
 Various utilities are available to generate contents, 
 see for example [`add_table`](@ref), [`add_plot`](@ref), [`add_markdown`](@ref).
 
-Then, to use the custom postprocessor:
+Then, to use the custom postprocessor, add it to the 
+`postprocessors` argument:
 
 ```@example custom
 using Pigeons 
