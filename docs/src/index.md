@@ -33,15 +33,17 @@ using Pigeons
 
 pt = pigeons(
         target = toy_mvn_target(2), 
+        n_rounds = 4,
         record = [traces; round_trip; record_default()])
 
-report(pt) # hide
+report(pt) 
+nothing # hide
 ```
 
 This will generate an HTML report with various useful diagnostic 
 plots and open it in your default browser. 
 
-See `Examples` in the left side bar to see examples of reports. 
+See `Examples` in the left side bar to see examples of such reports. 
 
 See [`report`](@ref) for more information on the options available. 
 
@@ -65,9 +67,10 @@ end;
 
 y = Bool[1, 1, 1, 0, 0, 1]
 model = coinflip(; N=length(y)) | (; y)
-chain = sample(model, NUTS(), 1_000; progress=false)
+chain = sample(model, NUTS(), 100; progress=false)
 
-report(chain) # hide
+report(chain) 
+nothing # hide
 ```
 
 
@@ -108,9 +111,20 @@ using Pigeons
 
 pt = pigeons(
         target = toy_mvn_target(2), 
+        n_rounds = 4,
         record = [traces; round_trip; record_default()])
 
-report(pt; postprocessors = [report_dim; default_postprocessors()]) # hide
+report(pt; postprocessors = [report_dim; default_postprocessors()]) 
+nothing # hide
 ```
 
 Pull requests for additional postprocessors are welcome. 
+
+
+## Documenter.jl integration 
+
+See our [Documenter.jl make file](https://github.com/Julia-Tempering/InferenceReport.jl/blob/main/docs/make.jl) to see how to 
+integrate InferenceReport into a broader documentation page. 
+The key functions used are [`headless`](@ref), 
+[`report_to_docs`](@ref) and 
+[`as_doc_page`](@ref).

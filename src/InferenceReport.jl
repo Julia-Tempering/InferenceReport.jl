@@ -13,8 +13,9 @@ using CSV
 using Serialization
 using AlgebraOfGraphics
 using DocStringExtensions
-
-
+using Dates
+using Random
+using SplittableRandoms
 import Pigeons: @auto
 
 """
@@ -37,12 +38,12 @@ $FIELDS
     """
     If true, the report webpage's md files are rendered into html files.
     """
-    render::Bool = true 
+    render::Bool = isinteractive[] 
 
     """
     If true, the report webpage will be opened automatically.
     """
-    view::Bool = true 
+    view::Bool = isinteractive[] 
 
     """
     The postprocessors to use. 
@@ -87,7 +88,6 @@ $FIELDS
     chains 
 end
 
-# TODO: constant-memory variants?
 Inference(result::Result{PT}) = Inference(load(result))
 Inference(algorithm) = Inference(algorithm, Chains(algorithm))
 Inference(chains::Chains) = Inference(nothing, chains)
@@ -191,7 +191,7 @@ $SIGNATURES
 function report(algo_or_chains, options::ReportOptions) 
     inference = Inference(algo_or_chains)
 
-    src_dir = mkpath("$(options.exec_folder)/src")
+    src_dir = mkpath("$(options.exec_folder)")
     context = PostprocessContext(inference, src_dir, String[], options)
 
     for postprocessor in options.postprocessors 
@@ -204,7 +204,7 @@ function report(algo_or_chains, options::ReportOptions)
         end
     end
 
-    write(output_file(context, "inference", "md"), join(context.generated_markdown, "\n"))
+    write(output_file(context, "index", "md"), join(context.generated_markdown, "\n"))
     if options.render
         render(context)
         if options.view 
@@ -217,46 +217,80 @@ end
 """
 $SIGNATURES 
 
-Similar to [`report`](@ref) but as part of a larger documentation site. 
+Similar to [`report`](@ref) but with different defaults to 
+facilitate including the 
+result as part of a larger documentation site. 
 
-Returns the correct relative path to the `.md` file to be passed to 
-the `pages` argument of [`makedocs`](https://documenter.juliadocs.org/stable/lib/public/#Documenter.makedocs).
+Use in combination with [`as_doc_page`](@ref).
 """
 function report_to_docs(algo_or_chains; doc_root::String, args...)
-    @assert basename(doc_root) == "docs"
-    
-    context = report(algo_or_chains; 
-        render = false, 
-        exec_folder = tempdir(), 
-        args...)
+    # results has to be placed in docs/src 
+    # and for some mysterious reason, the standard results/all/xyz/ does not 
+    # work (too deep of a hierarchy?)
+    basename(doc_root) == "docs"
+    generated_dir = "$doc_root/src/generated"
 
-    name = target_name(context) 
-    output = context.output_directory
-    id = basename(dirname(output))
-
-    dest = "$doc_root/src/generated"
+    name = target_name(ReportOptions(; args...).target_name, algo_or_chains)
+    rng = SplittableRandom(getpid() * now().instant.periods.value)
+    id = "$(randstring(rng, 8))"
+    dest = "$generated_dir/$name-$id"
     mkpath(dest)
-
-    mv("$output", "$dest/$name-$id")
-
-    return "generated/$name-$id/inference.md"
+    report(algo_or_chains; 
+        render = false, 
+        exec_folder = dest, 
+        args...)
 end
 
-view_webpage(exec_folder) = open_in_default_browser("$exec_folder/build/inference/index.html")
+"""
+$SIGNATURES
 
+Pass to the `pages` argument of 
+[`makedocs`](https://documenter.juliadocs.org/stable/lib/public/#Documenter.makedocs) 
+to properly include the generated page in the Documenter.jl navigation bar. 
+"""
+as_doc_page(context) = "`$(target_name(context))`" => "generated/$(basename(context.output_directory))/index.md"
+
+"""
+$SIGNATURES 
+"""
+view_webpage(exec_folder) = open_in_default_browser("$exec_folder/build/index/index.html")
+
+"""
+$SIGNATURES 
+"""
 render(context) = 
     makedocs(;
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
         repo="https://github.com/Julia-Tempering/Pigeons.jl/blob/{commit}{path}#{line}",
         format = Documenter.HTML(),
-        pages = ["`$(target_name(context))`" => "inference.md"])
+        pages = ["`$(target_name(context))`" => "index.md"])
 
+# Controls defaults such as whether to render and open webpage right away
+# Julia's isinteractive not good enough: returns true even inside Documenter.jl rendering pipeline
+const isinteractive = Ref{Bool}(true)
+
+""" 
+$SIGNATURES 
+
+Enclose calls to [`report_to_docs`](@ref) and [`report`](@ref) 
+with different defaults for the `view` and `render` options, 
+setting them to false by default.
+"""
+function headless(lambda)
+    previous = isinteractive[]
+    isinteractive[] = false 
+    try 
+        lambda() 
+    finally
+        isinteractive[] = previous
+    end
+end
 
 include("building_blocks.jl")
 include("utils.jl")
 include("processors.jl")
 
-export  report
+export report
 
 end # module

@@ -17,7 +17,7 @@ function add_table(context; table, title, kw_pretty_table_args...)
             $markdown_table 
 
             ```@raw html
-            <a href="../$(file_name(title, "csv"))">💾 CSV</a>
+            <a href="$(file_name(title, "csv"))">💾 CSV</a>
             ```
             """)
 end
@@ -26,14 +26,14 @@ end
 $SIGNATURES
 """
 function add_plot(context; file, title, description = "", movie = nothing)
-    movie_link = isnothing(movie) ? "" : """⏐<a href="../$movie">🍿 Movie </a>"""
+    movie_link = isnothing(movie) ? "" : """⏐<a href="$movie">🍿 Movie </a>"""
     add_markdown(context; 
         title, 
         contents = """
             $description
             ```@raw html
-            <iframe src="../$file" style="height:500px;width:100%;"></iframe>
-            <a href="../$file"> 🔍 Full page </a> $movie_link
+            <iframe src="$file" style="height:500px;width:100%;"></iframe>
+            <a href="$file"> 🔍 Full page </a> $movie_link
             ```
             """
     )
