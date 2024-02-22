@@ -93,6 +93,14 @@ function git_setup_string()
     end
 end
 
+function clean_stan_name(str)
+    if startswith(str, "StanLogPotential(") 
+        str[18:end-1]
+    else
+        str
+    end
+end
+
 function create_inputs_script(context, script) 
     write(output_file(context, "create_inputs", "jl"), script)
     # TODO: test it via serialization

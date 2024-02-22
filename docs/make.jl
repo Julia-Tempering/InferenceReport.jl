@@ -116,7 +116,7 @@ headless() do
 end
 
 file_in_readme = "$doc_root/build/generated/toy_turing_unid_model/src/index.html"
-if !isfile(file_in_readme)
+if !skip_example && !isfile(file_in_readme)
     throw("Missing file expected in README.md: $file_in_readme")
 end
 

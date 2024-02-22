@@ -13,6 +13,7 @@ using CSV
 using Serialization
 using AlgebraOfGraphics
 using DocStringExtensions
+using JSON
 import Pigeons: @auto
 
 include("ReportOptions.jl")
@@ -23,6 +24,7 @@ include("PostprocessContext.jl")
 $SIGNATURES
 """
 default_postprocessors() = [
+    target_description,
     pair_plot,
     trace_plot, 
     moments,
