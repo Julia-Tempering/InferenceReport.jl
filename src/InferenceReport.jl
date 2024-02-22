@@ -96,9 +96,7 @@ function report_to_docs(algo_or_chains; doc_root::String, args...)
     generated_dir = "$doc_root/src/generated"
 
     name = target_name(ReportOptions(; args...).target_name, algo_or_chains)
-    rng = SplittableRandom(getpid() * now().instant.periods.value)
-    id = "$(randstring(rng, 8))"
-    dest = "$generated_dir/$name-$id"
+    dest = "$generated_dir/$name"
     mkpath(dest)
     report(algo_or_chains; 
         render = false, 
