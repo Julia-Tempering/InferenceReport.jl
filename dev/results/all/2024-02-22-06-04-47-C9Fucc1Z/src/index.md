@@ -1,3 +1,7 @@
+## Dimension 
+
+The target has 2 parameters.
+
 ## Pair plot 
 
 Diagonal entries show estimates of the marginal 
@@ -87,10 +91,10 @@ the adaptation round.
 
 | **round** | **n\_scans** | **n\_tempered\_restarts** | **global\_barrier** | **global\_barrier\_variational** | **last\_round\_max\_time** | **last\_round\_max\_allocation** | **stepping\_stone** |
 |----------:|-------------:|--------------------------:|--------------------:|---------------------------------:|---------------------------:|---------------------------------:|--------------------:|
-| 1         | 2            | 0                         | 0.609292            | missing                          | 3.4605e-5                  | 11584.0                          | -1.67908            |
-| 2         | 4            | 0                         | 1.27792             | missing                          | 4.5375e-5                  | 18368.0                          | -1.86357            |
-| 3         | 8            | 0                         | 1.3914              | missing                          | 5.4993e-5                  | 33440.0                          | -2.29016            |
-| 4         | 16           | 1                         | 1.54735             | missing                          | 6.96e-5                    | 58176.0                          | -2.26653            |
+| 1         | 2            | 0                         | 0.609292            | missing                          | 3.0517e-5                  | 11584.0                          | -1.67908            |
+| 2         | 4            | 0                         | 1.27792             | missing                          | 4.843e-5                   | 18368.0                          | -1.86357            |
+| 3         | 8            | 0                         | 1.3914              | missing                          | 4.1678e-5                  | 33440.0                          | -2.29016            |
+| 4         | 16           | 1                         | 1.54735             | missing                          | 6.0904e-5                  | 58176.0                          | -2.26653            |
  
 
 ```@raw html
