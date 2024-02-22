@@ -7,7 +7,9 @@
 
     pt = pigeons(inputs)
 
-    context = report(pt; reproducibility_command = "toy_mvn_target(2)")
+    context = report(pt; 
+                view = false,
+                reproducibility_command = "toy_mvn_target(2)")
 
     @test length(context.generated_markdown) == 
           length(InferenceReport.default_postprocessors()) - 1 # MPI output

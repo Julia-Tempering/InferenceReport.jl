@@ -18,7 +18,9 @@ import InferenceReport: get_chains, default_postprocessors, add_table, add_plot,
             n_rounds = 4,
             record = [traces; round_trip; record_default()])
 
-    context = report(pt; postprocessors = [report_dim; default_postprocessors()]) 
+    context = report(pt; 
+                view = false,
+                postprocessors = [report_dim; default_postprocessors()]) 
 
     @test contains(context.generated_markdown[1], "The target has 2 parameters.")
 
