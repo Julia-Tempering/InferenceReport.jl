@@ -15,9 +15,15 @@ $FIELDS
     output_directory::String
 
     """
-    Vector of Strings used internally. 
+    Vector of Strings used internally to create the markdown page. 
     """
-    generated_markdown
+    generated_markdown::Vector{String}
+
+    """
+    Generated dictionary used internally to create a JSON object for indexing 
+    purposes.
+    """
+    generated_dict::Dict{String,Any}
 
     """
     The [`ReportOptions`](@ref). 

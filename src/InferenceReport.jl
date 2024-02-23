@@ -57,7 +57,7 @@ function report(algo_or_chains, options::ReportOptions)
     inference = Inference(algo_or_chains)
 
     src_dir = mkpath("$(options.exec_folder)/src")
-    context = PostprocessContext(inference, src_dir, String[], options)
+    context = PostprocessContext(inference, src_dir, String[], Dict{String,Any}(), options)
 
     for postprocessor in options.postprocessors 
         print("$postprocessor...")
@@ -69,6 +69,7 @@ function report(algo_or_chains, options::ReportOptions)
         end
     end
 
+    write(output_file(context, "info", "json"), JSON.json(context.generated_dict, 4))
     write(output_file(context, "index", "md"), join(context.generated_markdown, "\n"))
     if options.render
         render(context)
@@ -76,6 +77,7 @@ function report(algo_or_chains, options::ReportOptions)
             view_webpage(options.exec_folder)
         end
     end 
+    println("Report generated at: $(options.exec_folder)")
     return context
 end
 

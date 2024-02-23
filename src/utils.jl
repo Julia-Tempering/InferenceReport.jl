@@ -55,16 +55,15 @@ reproducibility_command(context, ::Nothing) =
     
 function reproducibility_command(context, pt::PT) 
     # create the piece just for the input
+    add_key_value(context, "reproducibility_command_inputs", context.options.reproducibility_command)
     create_inputs = """
-        $(git_setup_string()) 
+        $(git_setup_string(context)) 
 
         using Pigeons
         inputs = $(context.options.reproducibility_command)
         """
-    # write to file, test it against pt's input
+    # write to file, TODO: test it against pt's input
     create_inputs_script(context, create_inputs) 
-
-    # TODO: JSON file for submission to the Museum?
 
     # then provide the rest
     return """
@@ -74,11 +73,16 @@ function reproducibility_command(context, pt::PT)
         """
 end
 
-function git_setup_string() 
+function git_setup_string(context) 
     try 
         current_commit = chomp(read(`git rev-parse HEAD`, String))
         remote_repo = chomp(read(`git config --get remote.origin.url`, String))
         cloned_name = replace(basename(remote_repo), ".git" => "")
+        
+        add_key_value(context, "current_commit", current_commit)
+        add_key_value(context, "remote_repo", remote_repo)
+        add_key_value(context, "cloned_name", cloned_name)
+        
         return """
             run(`git clone $remote_repo`)
             cd("$cloned_name")
@@ -89,7 +93,7 @@ function git_setup_string()
             Pkg.instantiate()
             """
     catch 
-        throw("cannot find a git remote and/or commit")
+        throw("cannot find a git remote and/or commit: $e")
     end
 end
 

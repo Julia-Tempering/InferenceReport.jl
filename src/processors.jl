@@ -164,6 +164,7 @@ function reproducibility_info(context)
         throw("missing reproducibility_command")
     end
     cmd = reproducibility_command(context, context.inference.algorithm)
+    add_key_value(context, "reproducibility_command", cmd)
     add_markdown(context; 
         title = "Reproducibility",
         contents = """
@@ -208,7 +209,9 @@ $SIGNATURES
 Progression of the log-normalization constant estimate as 
 a function of the round. 
 """
-logz_progress(context) = 
+function logz_progress(context) 
+    final_val = Pigeons.stepping_stone(get_pt(context))
+    add_key_value(context, "logz", final_val)
     pigeons_progress(context; 
         property = :stepping_stone, 
         title = "Evidence estimation progress",
@@ -217,7 +220,10 @@ logz_progress(context) =
             Estimate of the log normalization (computed using 
             the stepping stone estimator) as a function of 
             the adaptation round. 
+
+            Last round estimate: ``$final_val``
             """)
+end
 
 """
 $SIGNATURES 
@@ -225,7 +231,9 @@ $SIGNATURES
 Progression of the global communication barrier estimate as 
 a function of the round. 
 """
-gcb_progress(context) = 
+function gcb_progress(context) 
+    final_val = Pigeons.global_barrier(get_pt(context))
+    add_key_value(context, "gcb", final_val)
     pigeons_progress(context; 
         property = :global_barrier, 
         title = "GCB estimation progress",
@@ -240,7 +248,10 @@ gcb_progress(context) =
             The theoretical framework of [Syed et al., 2021](https://academic.oup.com/jrsssb/article/84/2/321/7056147)
             yields that under simplifying assumptions, it is optimal to set the number of chains 
             (the argument `n_chains` in `pigeons()`) to roughly 2Λ.
+
+            Last round estimate: ``$final_val``
             """)
+end
 
 """ 
 $SIGNATURES 
