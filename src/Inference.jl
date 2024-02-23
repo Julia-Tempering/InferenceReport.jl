@@ -18,7 +18,7 @@ $FIELDS
     chains 
 end
 
-Inference(result::Result{PT}) = Inference(load(result))
+Inference(result::Result{PT}) = Inference(Pigeons.load(result))
 Inference(algorithm) = Inference(algorithm, safely_build_chains(algorithm))
 Inference(chains::Chains) = Inference(nothing, chains)
 

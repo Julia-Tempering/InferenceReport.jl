@@ -14,16 +14,16 @@ $FIELDS
     max_moving_plot_iters::Int = isinteractive[] ? 0 : 100
 
     """
-    Name of the target. If nothing, [`target_name`](@ref) will 
-    be used to attempt to auto-detect it via [`target_name`](@ref) 
+    Name of the target. If nothing, will attempt to auto-detect a 
+    name via multiple dispatch of the functions [`target_name`](@ref) 
     or [`pigeons_target_name`](@ref).
     """
     target_name::Union{String, Nothing} = nothing
 
     """
-    Extended description of the target. If nothing, [`target_name`](@ref) will 
-    be used to attempt to auto-detect it via [`target_description`](@ref) 
-    or [`pigeons_target_description`](@ref).
+    Extended description of the target. If nothing, will attempt to 
+    auto-detect it via [`target_description`](@ref) 
+    and [`pigeons_target_description`](@ref).
     """
     target_description::Union{String, Nothing} = nothing
 

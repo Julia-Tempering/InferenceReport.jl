@@ -30,6 +30,7 @@ default_postprocessors() = [
     moments,
     trace_plot_cumulative,    
     mpi_standard_out,
+    lcb,
     gcb_progress,
     logz_progress,
     round_trip_progress,

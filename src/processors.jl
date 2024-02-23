@@ -27,6 +27,7 @@ function pair_plot(context)
     add_plot(context; 
         file = "pair_plot.svg", 
         title = "Pair plot", 
+        url_help = "https://sefffal.github.io/PairPlots.jl",
         movie = moving_pair_plot(context),
         description)
 end
@@ -67,6 +68,7 @@ function pigeons_summary(context)
     summary = get_pt(context).shared.reports.summary
     add_table(context; 
         table = summary, 
+        url_help = "https://pigeons.run/dev/output-reports/",
         title = "Pigeons summary")
 end
 
@@ -129,7 +131,11 @@ function trace_plot(context, cumulative)
     CairoMakie.save(file, fig, size= (800, 200 * n_params))
     add_plot(context; 
         file = "$name.svg", 
-        title = cumulative ? "Cumulative traces" : "Trace plots")
+        title = cumulative ? "Cumulative traces" : "Trace plots",
+        description = cumulative ? """
+            For each iteration ``i``, shows the running average up to ``i``,
+            ``\\frac{1}{i} \\sum_{n = 1}^{i} x_n``. 
+            """ : "")
 end
 
 """
@@ -144,6 +150,7 @@ function pigeons_inputs(context)
     add_table(context; 
         table = dict,
         title = "Pigeons inputs", 
+        url_help = "https://pigeons.run/dev/reference/#Pigeons.Inputs",
         alignment = [:r, :l])
 end
 
@@ -205,6 +212,7 @@ logz_progress(context) =
     pigeons_progress(context; 
         property = :stepping_stone, 
         title = "Evidence estimation progress",
+        url_help = "https://pigeons.run/dev/output-normalization/",
         description = """
             Estimate of the log normalization (computed using 
             the stepping stone estimator) as a function of 
@@ -221,11 +229,50 @@ gcb_progress(context) =
     pigeons_progress(context; 
         property = :global_barrier, 
         title = "GCB estimation progress",
+        url_help = "https://pigeons.run/dev/output-pt/#Global-communication-barrier",
         description = """
             Estimate of the Global Communication Barrier (GCB) 
             as a function of 
             the adaptation round. 
+
+            The global communication barrier can be used 
+            to set the number of chains. 
+            The theoretical framework of [Syed et al., 2021](https://academic.oup.com/jrsssb/article/84/2/321/7056147)
+            yields that under simplifying assumptions, it is optimal to set the number of chains 
+            (the argument `n_chains` in `pigeons()`) to roughly 2Λ.
             """)
+
+""" 
+$SIGNATURES 
+
+The local communication barrier estimated in the last round. 
+"""
+function lcb(context)
+    barrier = get_pt(context).shared.tempering.communication_barriers.localbarrier
+    xs = range(0.0, 1.0, length=100)
+    ys = barrier.(xs)
+    f = Figure()
+    ax = Axis(f[1, 1])
+    lines!(xs, ys)
+    ax.xlabel = "β"
+    ax.ylabel = "λ(β)"
+    name = "local_barrier"
+    file = output_file(context, name, "svg")
+    CairoMakie.save(file, f)
+    add_plot(context; 
+        file = "$name.svg", 
+        title = "Local communication barrier", 
+        url_help = "https://pigeons.run/dev/output-pt/#Local-communication-barrier",
+        description = """
+        When the global communication barrier is large, many chains may 
+        be required to obtain tempered restarts.
+
+        The local communication barrier can be used to visualize the cause 
+        of a high global communication barrier. For example, if there is a 
+        sharp peak close to a reference constructed from the prior, it may 
+        be useful to switch to a [variational approximation](https://pigeons.run/dev/variational/#variational-pt).
+        """)
+end
 
 """
 $SIGNATURES 
@@ -241,14 +288,20 @@ function round_trip_progress(context)
     pigeons_progress(context; 
         property = :n_tempered_restarts, 
         title = "Round trips",
+        url_help = "https://pigeons.run/dev/output-pt/#Round-trips-and-tempered-restarts",
         description = """
             Number of tempered restarts  
             as a function of 
             the adaptation round. 
+
+            A tempered restart happens when a sample from the 
+            reference percolates to the target. When the reference 
+            supports iid sampling, tempered restarts can enable 
+            large jumps in the state space.
             """)     
 end       
 
-function pigeons_progress(context; property, title, description)
+function pigeons_progress(context; property, title, args...)
     pt = get_pt(context)
     recipe = 
         data(pt.shared.reports.summary) * 
@@ -260,5 +313,5 @@ function pigeons_progress(context; property, title, description)
     add_plot(context; 
         file = "$(property)_progress.svg", 
         title, 
-        description)
+        args...)
 end
