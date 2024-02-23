@@ -19,5 +19,13 @@ $FIELDS
 end
 
 Inference(result::Result{PT}) = Inference(load(result))
-Inference(algorithm) = Inference(algorithm, Chains(algorithm))
+Inference(algorithm) = Inference(algorithm, safely_build_chains(algorithm))
 Inference(chains::Chains) = Inference(nothing, chains)
+
+safely_build_chains(algorithm) = 
+    try 
+        Chains(algorithm) 
+    catch e 
+        println("Could not build traces: $e")
+        nothing
+    end

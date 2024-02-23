@@ -21,13 +21,18 @@ using Pkg; Pkg.add("InferenceReport")
 
 ## Usage
 
+InferenceReport's main function is `report`. It takes one 
+mandatory argument, which at the moment can be either Pigeons' 
+Parallel Tempering (PT) output, or MCMCChains' Chains struct. 
+
+We provide an example of each in the next two sections. 
+
+
 ### From Pigeons
 
 First, run Parallel Tempering (PT) via [Pigeons](https://pigeons.run/dev/). 
 
-**Make sure to save the traces,** using the argument `record = [traces]`. 
-
-Then call `report()` on the PT struct:
+Then call `report()` on the resulting PT struct:
 
 ```@example pigeons
 using InferenceReport
@@ -55,6 +60,8 @@ See [`report`](@ref) for more information on the options available.
 [MCMCChains.jl](https://github.com/TuringLang/MCMCChains.jl) is used 
 to store MCMC samples in packages such as [Turing.jl](https://github.com/TuringLang/Turing.jl). 
 
+Simply pass it into `report` to generate and open an HTML report:
+
 ```@example turing
 using InferenceReport
 using Turing 
@@ -73,6 +80,56 @@ chain = sample(model, NUTS(), 100; progress=false)
 
 report(chain) 
 nothing # hide
+```
+
+## Target descriptions 
+
+Two methods are available to specify descriptions for target 
+distributions. 
+
+First, a markdown description can be passed in as argument:
+
+```@example descriptions
+using InferenceReport
+using Pigeons
+
+target = toy_mvn_target(2)
+pt = pigeons(; target, n_rounds = 2)
+
+report(pt; 
+    target_description = 
+        """
+        The model description can use math: ``x^2``. 
+        """)
+
+nothing #hide
+```
+
+But often, we may have a family of targets (e.g., in the above 
+example, normals 
+indexed by their dimensionality) and would like the 
+documentation to be automatically generated based on the parameters. 
+
+To do so, implement your own [`pigeons_target_description`](@ref) 
+as done in the following example:
+
+```@example descriptions
+using InferenceReport
+using Pigeons
+
+target = toy_mvn_target(2)
+pt = pigeons(; target, n_rounds = 2)
+
+const MyTargetType = typeof(target)
+InferenceReport.pigeons_target_description(target::MyTargetType) = 
+    """
+    Some description. 
+
+    It can use information in the target, e.g. here 
+    to report that its dimension is: $(target.dim)
+    """
+
+nothing #hide
 ```
 
 

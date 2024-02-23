@@ -165,7 +165,7 @@ function mpi_standard_out(context)
     pt = get_pt(context)
     output_folder = "$(pt.exec_folder)/1"
     if !isfile(output_folder)
-        throw("No MPI std out files found")
+        throw("no MPI std out files found")
     end
     machine = 1
     output_file_name = Pigeons.find_rank_file(output_folder, machine)

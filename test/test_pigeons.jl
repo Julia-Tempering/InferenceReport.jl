@@ -9,6 +9,7 @@
 
     context = report(pt; 
                 view = false,
+                target_description = "Description",
                 reproducibility_command = "toy_mvn_target(2)")
 
     @test length(context.generated_markdown) == 

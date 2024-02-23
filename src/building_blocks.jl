@@ -79,13 +79,17 @@ target_description(context::PostprocessContext) =
     )
 
 target_description(unspecified_description::Nothing, pt::PT) = pigeons_target_description(pt.inputs.target)
-target_description(unspecified_description::Nothing, _) = throw("No description provided")
+target_description(unspecified_description::Nothing, _) = throw("no description provided")
 target_description(specified_description::String, _) = specified_description 
 
 """
 $SIGNATURES 
+
+By default, dispatch to `pigeons_target_description(target, Val(Symbol(pigeons_target_name(target))))`, 
+to handle "vague types" such as TuringLogPotential and StanLogPotential.
 """
 pigeons_target_description(target) = pigeons_target_description(target, Val(Symbol(pigeons_target_name(target))))
+pigeons_target_description(target, _) = throw("no description provided")
 
 # Some examples below of how to create description:
 
@@ -207,4 +211,7 @@ get_pt(pt::PT) = pt
 """
 $SIGNATURES
 """
-get_chains(context) = context.inference.chains
+get_chains(context) = 
+    isnothing(context.inference.chains) ? 
+    throw("no traces provided (in Pigeons, use 'record = [traces])") :
+    context.inference.chains
