@@ -7,21 +7,28 @@ function pair_plot(context)
     plot = PairPlots.pairplot(get_chains(context)) 
     file = output_file(context, "pair_plot", "svg")
     CairoMakie.save(file, plot)
+
+    description = """
+    Diagonal entries show estimates of the marginal 
+    densities as well as the (0.16, 0.5, 0.84) 
+    quantiles (dotted lines). 
+    Off-diagonal entries show estimates of the pairwise 
+    densities. 
+    """
+    if moving_pair_plot_iters(context) > 0 
+        description *= """
+
+        Movie linked below (🍿) superimposes 
+        $(moving_pair_plot_iters(context)) iterations 
+        of MCMC. 
+        """
+    end
+
     add_plot(context; 
         file = "pair_plot.svg", 
         title = "Pair plot", 
         movie = moving_pair_plot(context),
-        description = """
-            Diagonal entries show estimates of the marginal 
-            densities as well as the (0.16, 0.5, 0.84) 
-            quantiles (dotted lines). 
-            Off-diagonal entries show estimates of the pairwise 
-            densities. 
-
-            Movie linked below (🍿) superimposes 
-            $(moving_pair_plot_iters(context)) iterations 
-            of MCMC. 
-            """)
+        description)
 end
 
 moving_pair_plot_iters(context) = min(size(get_chains(context))[1], context.options.max_moving_plot_iters)
@@ -32,11 +39,15 @@ $SIGNATURES
 A PairPlot movie showing the sample in the reference chain moving in the state space. 
 """
 function moving_pair_plot(context)
+    n_iters = moving_pair_plot_iters(context)
+    if n_iters == 0 
+        return nothing 
+    end
     mcmc_chains = get_chains(context)
     n = filter(x -> x != :log_density, names(mcmc_chains)) 
     fig = Figure(size=(800,800))
     framerate = 10
-    iters = range(1, moving_pair_plot_iters(context))
+    iters = range(1, n_iters)
     file_output = "moving_pair.mp4"
     record(fig, "$(context.output_directory)/$file_output", iters; framerate) do t
         empty!(fig)

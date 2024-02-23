@@ -6,8 +6,12 @@ $FIELDS
 @kwdef struct ReportOptions 
     """
     Maximum number of iterations in [`moving_pair_plot`](@ref).
+    Set to zero to avoid creating such movie. 
+
+    Creating movies are a bit slow, so in interactive mode the 
+    default is zero, and 100 in [`headless`](@ref) mode.
     """
-    max_moving_plot_iters::Int = 100
+    max_moving_plot_iters::Int = isinteractive[] ? 0 : 100
 
     """
     Name of the target. If nothing, [`target_name`](@ref) will 
