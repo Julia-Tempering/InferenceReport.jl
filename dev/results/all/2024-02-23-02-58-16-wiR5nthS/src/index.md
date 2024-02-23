@@ -31,8 +31,8 @@ the adaptation round.
 
 | **round** | **n\_scans** | **n\_tempered\_restarts** | **global\_barrier** | **global\_barrier\_variational** | **last\_round\_max\_time** | **last\_round\_max\_allocation** | **stepping\_stone** |
 |----------:|-------------:|--------------------------:|--------------------:|---------------------------------:|---------------------------:|---------------------------------:|--------------------:|
-| 1         | 2            | missing                   | 0.609292            | missing                          | 3.1098e-5                  | 11424.0                          | -1.67908            |
-| 2         | 4            | missing                   | 1.27792             | missing                          | 3.731e-5                   | 18048.0                          | -1.86357            |
+| 1         | 2            | missing                   | 0.609292            | missing                          | 4.322e-5                   | 11424.0                          | -1.67908            |
+| 2         | 4            | missing                   | 1.27792             | missing                          | 4.6576e-5                  | 18048.0                          | -1.86357            |
  
 
 ```@raw html
