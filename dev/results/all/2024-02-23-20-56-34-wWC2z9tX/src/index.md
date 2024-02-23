@@ -1,15 +1,3 @@
-## Dimension 
-
-The target has 2 parameters.
-
-## Description 
-
-Some description. 
-
-It can use information in the target, e.g. here 
-to report that its dimension is: 2
-
-
 ## Pair plot 
 
 Diagonal entries show estimates of the marginal 
@@ -132,10 +120,10 @@ large jumps in the state space.
 
 | **round** | **n\_scans** | **n\_tempered\_restarts** | **global\_barrier** | **global\_barrier\_variational** | **last\_round\_max\_time** | **last\_round\_max\_allocation** | **stepping\_stone** |
 |----------:|-------------:|--------------------------:|--------------------:|---------------------------------:|---------------------------:|---------------------------------:|--------------------:|
-| 1         | 2            | 0                         | 0.609292            | missing                          | 4.1037e-5                  | 11584.0                          | -1.67908            |
-| 2         | 4            | 0                         | 1.27792             | missing                          | 4.4644e-5                  | 18368.0                          | -1.86357            |
-| 3         | 8            | 0                         | 1.3914              | missing                          | 4.5846e-5                  | 33440.0                          | -2.29016            |
-| 4         | 16           | 1                         | 1.54735             | missing                          | 6.2156e-5                  | 58176.0                          | -2.26653            |
+| 1         | 2            | 0                         | 0.609292            | missing                          | 4.1868e-5                  | 11584.0                          | -1.67908            |
+| 2         | 4            | 0                         | 1.27792             | missing                          | 4.9912e-5                  | 18368.0                          | -1.86357            |
+| 3         | 8            | 0                         | 1.3914              | missing                          | 5.6445e-5                  | 33440.0                          | -2.29016            |
+| 4         | 16           | 1                         | 1.54735             | missing                          | 7.6904e-5                  | 58176.0                          | -2.26653            |
  
 
 ```@raw html
