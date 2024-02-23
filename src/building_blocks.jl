@@ -105,7 +105,7 @@ pigeons_target_description(target, ::Val{:toy_turing_unid_model}) =
     \\begin{aligned}
     p_1 &\\sim \\text{Unif}(0, 1) \\\\
     p_2 &\\sim \\text{Unif}(0, 1) \\\\
-    y &\\sim \\text{Bern}(n, p_1 p_2)
+    y &\\sim \\text{Bin}(n, p_1 p_2)
     \\end{aligned}
     ```
 
@@ -143,7 +143,7 @@ function pigeons_target_description(target, ::Val{:funnel_model})
     ```math
     \\begin{aligned}
     y &\\sim \\text{Normal}(0, 3) \\\\
-    x_i &\\sim \\text{Normal}(0, \\exp(y / \\text{scale}) \\;\\text{ for }i \\in \\{1, \\dots, d\\}  \\\\
+    x_i &\\sim \\text{Normal}(0, \\exp(y / \\text{scale})) \\;\\text{ for }i \\in \\{1, \\dots, d\\}  \\\\
     \\end{aligned}
     ```
 

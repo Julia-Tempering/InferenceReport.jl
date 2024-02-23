@@ -1,4 +1,5 @@
 using Pigeons
+using DynamicPPL
 
 @testset "Hard coded description" begin
     pt = pigeons(target = Pigeons.toy_turing_unid_target(), n_rounds = 2)
