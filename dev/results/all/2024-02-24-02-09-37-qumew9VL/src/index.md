@@ -153,7 +153,7 @@ Last round estimate: ``-1.3491244009307835``
 ```
 run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)
 cd("InferenceReport.jl")
-run(`git checkout b391416810c8f04c641ac9abcd1fcce8181edfba`)
+run(`git checkout 881ca9b392a4a59a37875104a8a5cf908ce155b3`)
 
 using Pkg 
 Pkg.activate(".")

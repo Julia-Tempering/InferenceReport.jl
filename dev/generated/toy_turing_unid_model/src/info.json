@@ -1,9 +1,9 @@
 {
-    "current_commit": "b391416810c8f04c641ac9abcd1fcce8181edfba",
+    "current_commit": "881ca9b392a4a59a37875104a8a5cf908ce155b3",
     "cloned_name": "InferenceReport.jl",
     "gcb": 3.5523351664264387,
     "remote_repo": "https://github.com/Julia-Tempering/InferenceReport.jl",
-    "reproducibility_command": "run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)\ncd(\"InferenceReport.jl\")\nrun(`git checkout b391416810c8f04c641ac9abcd1fcce8181edfba`)\n\nusing Pkg \nPkg.activate(\".\")\nPkg.instantiate()\n \n\nusing Pigeons\ninputs = Inputs(; target = Pigeons.toy_turing_unid_target(), n_rounds = 10, record = [traces; round_trip; record_default()])\n \n\npt = pigeons(inputs)\n",
+    "reproducibility_command": "run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)\ncd(\"InferenceReport.jl\")\nrun(`git checkout 881ca9b392a4a59a37875104a8a5cf908ce155b3`)\n\nusing Pkg \nPkg.activate(\".\")\nPkg.instantiate()\n \n\nusing Pigeons\ninputs = Inputs(; target = Pigeons.toy_turing_unid_target(), n_rounds = 10, record = [traces; round_trip; record_default()])\n \n\npt = pigeons(inputs)\n",
     "logz": -11.771971135020596,
     "reproducibility_command_inputs": "Inputs(; target = Pigeons.toy_turing_unid_target(), n_rounds = 10, record = [traces; round_trip; record_default()])"
 }
