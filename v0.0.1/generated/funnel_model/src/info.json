@@ -1,0 +1,9 @@
+{
+    "current_commit": "881ca9b392a4a59a37875104a8a5cf908ce155b3",
+    "cloned_name": "InferenceReport.jl",
+    "gcb": 1.48023218918939,
+    "remote_repo": "https://github.com/Julia-Tempering/InferenceReport.jl",
+    "reproducibility_command": "run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)\ncd(\"InferenceReport.jl\")\nrun(`git checkout 881ca9b392a4a59a37875104a8a5cf908ce155b3`)\n\nusing Pkg \nPkg.activate(\".\")\nPkg.instantiate()\n \n\nusing Pigeons\ninputs = Inputs(; target = Pigeons.stan_funnel(2), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])\n \n\npt = pigeons(inputs)\n",
+    "logz": 0.022091653206380624,
+    "reproducibility_command_inputs": "Inputs(; target = Pigeons.stan_funnel(2), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])"
+}
