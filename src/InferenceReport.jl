@@ -94,7 +94,7 @@ function report_to_docs(algo_or_chains; doc_root::String, args...)
     # results has to be placed in docs/src 
     # and for some mysterious reason, the standard results/all/xyz/ does not 
     # work (too deep of a hierarchy?)
-    basename(doc_root) == "docs"
+    @assert basename(doc_root) == "docs"
     generated_dir = "$doc_root/src/generated"
 
     name = target_name(ReportOptions(; args...).target_name, algo_or_chains)
