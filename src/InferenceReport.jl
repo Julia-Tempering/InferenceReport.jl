@@ -5,8 +5,6 @@ using Documenter
 using MCMCChains
 using PairPlots
 using Pigeons
-using Plots
-using StatsPlots
 using PrettyTables 
 using MCMCChains 
 using CSV
