@@ -56,6 +56,7 @@ function report(algo_or_chains, options::ReportOptions)
 
     src_dir = mkpath("$(options.exec_folder)/src")
     context = PostprocessContext(inference, src_dir, String[], Dict{String,Any}(), options)
+    add_key_value(context, "target_name", target_name(options.target_name, algo_or_chains))
 
     for postprocessor in options.postprocessors 
         print("$postprocessor...")
