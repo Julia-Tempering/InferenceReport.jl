@@ -1,9 +1,10 @@
 {
-    "current_commit": "b51b4392fcd6995bb6d45bea3b12d018da2c8902",
+    "target_name": "banana_model",
+    "current_commit": "2b68458f722590614890c7905eedd97238708356",
     "cloned_name": "InferenceReport.jl",
     "gcb": 1.6962690420739768,
     "remote_repo": "https://github.com/Julia-Tempering/InferenceReport.jl",
-    "reproducibility_command": "run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)\ncd(\"InferenceReport.jl\")\nrun(`git checkout b51b4392fcd6995bb6d45bea3b12d018da2c8902`)\n\nusing Pkg \nPkg.activate(\".\")\nPkg.instantiate()\n \n\nusing Pigeons\ninputs = Inputs(; target = Pigeons.stan_banana(2), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])\n \n\npt = pigeons(inputs)\n",
+    "reproducibility_command": "run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)\ncd(\"InferenceReport.jl\")\nrun(`git checkout 2b68458f722590614890c7905eedd97238708356`)\n\nusing Pkg \nPkg.activate(\".\")\nPkg.instantiate()\n \n\nusing Pigeons\ninputs = Inputs(; target = Pigeons.stan_banana(2), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])\n \n\npt = pigeons(inputs)\n",
     "logz": -0.7160471255903893,
     "reproducibility_command_inputs": "Inputs(; target = Pigeons.stan_banana(2), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])"
 }
