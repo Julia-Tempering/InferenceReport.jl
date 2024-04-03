@@ -58,4 +58,11 @@ $FIELDS
     the [Inputs](https://pigeons.run/dev/reference/#Pigeons.Inputs). 
     """
     reproducibility_command::Union{String, Nothing} = nothing
+
+
+    """
+    A Documenter.Writer instance used to render the document. Default is an HTML
+    page, but other options including Documenter.LaTeX() are also possible.
+    """
+    writer::Documenter.Writer=Documenter.HTML(size_threshold=nothing)
 end

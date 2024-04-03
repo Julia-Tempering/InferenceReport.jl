@@ -5,8 +5,8 @@ Create a pair plot using [PairPlot.jl](https://github.com/sefffal/PairPlots.jl).
 """
 function pair_plot(context)
     plot = PairPlots.pairplot(get_chains(context)) 
-    file = output_file(context, "pair_plot", "svg")
-    CairoMakie.save(file, plot)
+    file = output_file(context, "pair_plot", "png")
+    CairoMakie.save(file, plot, px_per_unit=2)
 
     description = """
     Diagonal entries show estimates of the marginal 
@@ -25,7 +25,7 @@ function pair_plot(context)
     end
 
     add_plot(context; 
-        file = "pair_plot.svg", 
+        file = "pair_plot.png", 
         title = "Pair plot", 
         url_help = "https://sefffal.github.io/PairPlots.jl",
         movie = moving_pair_plot(context),
@@ -127,10 +127,10 @@ function trace_plot(context, cumulative)
     resize_to_layout!(fig)
 
     name = cumulative ? "cumulative_trace_plot" : "trace_plot"
-    file = output_file(context, name, "svg")
-    CairoMakie.save(file, fig, size= (800, 200 * n_params))
+    file = output_file(context, name, "png")
+    CairoMakie.save(file, fig, size= (800, 200 * n_params), px_per_unit=2)
     add_plot(context; 
-        file = "$name.svg", 
+        file = "$name.png", 
         title = cumulative ? "Cumulative traces" : "Trace plots",
         description = cumulative ? """
             For each iteration ``i``, shows the running average up to ``i``,
@@ -268,10 +268,10 @@ function lcb(context)
     ax.xlabel = "β"
     ax.ylabel = "λ(β)"
     name = "local_barrier"
-    file = output_file(context, name, "svg")
-    CairoMakie.save(file, f)
+    file = output_file(context, name, "png")
+    CairoMakie.save(file, f, px_per_unit=2)
     add_plot(context; 
-        file = "$name.svg", 
+        file = "$name.png", 
         title = "Local communication barrier", 
         url_help = "https://pigeons.run/dev/output-pt/#Local-communication-barrier",
         description = """
@@ -319,10 +319,10 @@ function pigeons_progress(context; property, title, args...)
         mapping(:round, property) * 
         visual(Lines)
     plot = draw(recipe)
-    file = output_file(context, "$(property)_progress", "svg")
+    file = output_file(context, "$(property)_progress", "png")
     CairoMakie.save(file, plot)
     add_plot(context; 
-        file = "$(property)_progress.svg", 
+        file = "$(property)_progress.png", 
         title, 
         args...)
 end
