@@ -38,7 +38,7 @@ function add_plot(context; file, title, url_help = nothing, description = "", mo
             contents = """
                 $description
                 ```@raw html
-                <iframe src="$file" style="height:500px;width:100%;"></iframe>
+                <img src="$file" style="display: block; max-width:100%; max-height:500px; width:auto; height:auto;"/>
                 <a href="$file"> 🔍 Full page </a> $movie_link $info_link
                 ```
                 """
