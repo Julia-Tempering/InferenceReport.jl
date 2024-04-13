@@ -127,7 +127,7 @@ render(context) =
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
         repo="https://github.com/Julia-Tempering/Pigeons.jl/blob/{commit}{path}#{line}",
-        format = Documenter.HTML(),
+        format = Documenter.HTML(size_threshold=nothing),
         pages = ["`$(target_name(context))`" => "index.md"])
 
 # Controls defaults such as whether to render and open webpage right away
