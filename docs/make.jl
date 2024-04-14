@@ -40,6 +40,7 @@ function run_examples()
                 record = [traces; round_trip; record_default()])
         unid = report_to_docs(
             pigeons(inputs);
+            show_error_traces = true,
             reproducibility_command,
             doc_root)
 
