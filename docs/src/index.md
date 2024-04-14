@@ -64,8 +64,7 @@ Simply pass it into `report` to generate and open an HTML report:
 
 ```@example turing
 using InferenceReport
-using DistributionsAD
-using DynamicPPL
+using Turing 
 using MCMCChains
 
 # example from Turing.jl's webpage
