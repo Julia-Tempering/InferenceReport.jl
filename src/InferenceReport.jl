@@ -67,7 +67,7 @@ function report(algo_or_chains, options::ReportOptions)
         catch e 
             println("[skipped: $e]")
             if options.show_error_traces 
-                @error "Something went wrong" exception=(e, catch_backtrace())
+                @error "Details:" exception=(e, catch_backtrace())
             end
         end
     end

@@ -56,6 +56,7 @@ function run_examples()
                 record = [traces; round_trip; record_default()])
         funnel = report_to_docs(
             pigeons(inputs);
+            show_error_traces = true,
             reproducibility_command,
             doc_root)
 
@@ -68,6 +69,7 @@ function run_examples()
                 record = [traces; round_trip; record_default()])
         banana = report_to_docs(
             pigeons(inputs);
+            show_error_traces = true,
             reproducibility_command,
             doc_root)
 
@@ -80,6 +82,7 @@ function run_examples()
                 record = [traces; round_trip; record_default()])
         schools = report_to_docs(
             pigeons(inputs);
+            show_error_traces = true,
             reproducibility_command,
             doc_root)
 
