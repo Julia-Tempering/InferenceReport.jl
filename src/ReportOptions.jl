@@ -58,4 +58,9 @@ $FIELDS
     the [Inputs](https://pigeons.run/dev/reference/#Pigeons.Inputs). 
     """
     reproducibility_command::Union{String, Nothing} = nothing
+
+    """
+    Useful for debugging, false by default. 
+    """
+    show_error_traces::Bool = false
 end
