@@ -1,10 +1,10 @@
 {
     "target_name": "eight_schools_centered_model",
-    "current_commit": "51f50e366439a399129fdf7a8b8b05022e5dfd7c",
+    "current_commit": "22a7b28e437f2656ac85b3cb363af8997fed38ee",
     "cloned_name": "InferenceReport.jl",
     "gcb": 2.0620808747130686,
     "remote_repo": "https://github.com/Julia-Tempering/InferenceReport.jl",
-    "reproducibility_command": "run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)\ncd(\"InferenceReport.jl\")\nrun(`git checkout 51f50e366439a399129fdf7a8b8b05022e5dfd7c`)\n\nusing Pkg \nPkg.activate(\".\")\nPkg.instantiate()\n \n\nusing Pigeons\ninputs = Inputs(; target = Pigeons.stan_eight_schools(), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])\n \n\npt = pigeons(inputs)\n",
+    "reproducibility_command": "run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)\ncd(\"InferenceReport.jl\")\nrun(`git checkout 22a7b28e437f2656ac85b3cb363af8997fed38ee`)\n\nusing Pkg \nPkg.activate(\".\")\nPkg.instantiate()\n \n\nusing Pigeons\ninputs = Inputs(; target = Pigeons.stan_eight_schools(), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])\n \n\npt = pigeons(inputs)\n",
     "logz": -31.81526068494555,
     "reproducibility_command_inputs": "Inputs(; target = Pigeons.stan_eight_schools(), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])"
 }
