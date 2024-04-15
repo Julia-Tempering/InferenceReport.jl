@@ -54,6 +54,14 @@ See `Examples` in the left side bar to see examples of such reports.
 
 See [`report`](@ref) for more information on the options available. 
 
+You may also generate a TeX/PDF version using 
+Documenter.jl's [TeX support](https://documenter.juliadocs.org/stable/man/other-formats/) 
+as follows:
+
+```@example pigeons
+report(pt; writer=InferenceReport.Documenter.LaTeX(platform = "docker")) 
+```
+
 
 ### From MCMCChains 
 
