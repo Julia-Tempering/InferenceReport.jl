@@ -238,4 +238,4 @@ See our [Documenter.jl make file](https://github.com/Julia-Tempering/InferenceRe
 integrate InferenceReport into a broader documentation page. 
 The key functions used are [`headless`](@ref), 
 [`report_to_docs`](@ref) and 
-[`as_doc_page`](@ref).
+[`as_doc_page`](@ref). 
