@@ -1,6 +1,3 @@
-# Temporary type piracy to fix issue with `Truth` in PairPlots
-Base.keytype(::NamedTuple) = Symbol
-
 # make sure we are using the version contained
 # in whatever state the parent directory is;
 # this is the intended behaviour both for CI and
