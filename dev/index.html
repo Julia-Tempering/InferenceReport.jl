@@ -10,10 +10,10 @@ pt = pigeons(
 report(pt)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">───────────────────────────────────────────────────────────────────────────────────────
   scans     restarts      Λ        time(s)    allc(B)  log(Z₁/Z₀)   min(α)     mean(α)
 ────────── ────────── ────────── ────────── ────────── ────────── ────────── ──────────
-        2          0      0.609   4.15e-05   1.16e+04      -1.68      0.705      0.932
-        4          0       1.28   6.07e-05   1.84e+04      -1.86      0.527      0.858
-        8          0       1.39   6.32e-05   3.34e+04      -2.29      0.458      0.845
-       16          1       1.55   7.92e-05   5.82e+04      -2.27      0.646      0.828
+        2          0      0.609   4.14e-05   1.16e+04      -1.68      0.705      0.932
+        4          0       1.28   4.96e-05   1.84e+04      -1.86      0.527      0.858
+        8          0       1.39   5.57e-05   3.34e+04      -2.29      0.458      0.845
+       16          1       1.55   6.54e-05   5.82e+04      -2.27      0.646      0.828
 ───────────────────────────────────────────────────────────────────────────────────────
 target_description...[skipped: no description provided]
 pair_plot... ✓
@@ -28,7 +28,20 @@ round_trip_progress... ✓
 pigeons_summary... ✓
 pigeons_inputs... ✓
 reproducibility_info...[skipped: missing reproducibility_command]
-Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-01-16-qQSw434O</code></pre><p>This will generate an HTML report with various useful diagnostic  plots and open it in your default browser. </p><p>See <code>Examples</code> in the left side bar to see examples of such reports. </p><p>See <a href="reference/#InferenceReport.report-Tuple{Any, InferenceReport.ReportOptions}"><code>report</code></a> for more information on the options available. </p><p>You may also generate a TeX/PDF version using  Documenter.jl&#39;s <a href="https://documenter.juliadocs.org/stable/man/other-formats/">TeX support</a>  as follows:</p><pre><code class="language-julia hljs">report(pt; writer=InferenceReport.Documenter.LaTeX(platform = &quot;docker&quot;))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"></code></pre><h3 id="From-MCMCChains"><a class="docs-heading-anchor" href="#From-MCMCChains">From MCMCChains</a><a id="From-MCMCChains-1"></a><a class="docs-heading-anchor-permalink" href="#From-MCMCChains" title="Permalink"></a></h3><p><a href="https://github.com/TuringLang/MCMCChains.jl">MCMCChains.jl</a> is used  to store MCMC samples in packages such as <a href="https://github.com/TuringLang/Turing.jl">Turing.jl</a>. </p><p>Simply pass it into <code>report</code> to generate and open an HTML report:</p><pre><code class="language-julia hljs">using InferenceReport
+Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-19-44-4VBVTFJH</code></pre><p>This will generate an HTML report with various useful diagnostic  plots and open it in your default browser. </p><p>See <code>Examples</code> in the left side bar to see examples of such reports. </p><p>See <a href="reference/#InferenceReport.report-Tuple{Any, InferenceReport.ReportOptions}"><code>report</code></a> for more information on the options available. </p><p>You may also generate a TeX/PDF version using  Documenter.jl&#39;s <a href="https://documenter.juliadocs.org/stable/man/other-formats/">TeX support</a>  as follows:</p><pre><code class="language-julia hljs">report(pt; writer=InferenceReport.Documenter.LaTeX(platform = &quot;docker&quot;))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">target_description...[skipped: no description provided]
+pair_plot... ✓
+trace_plot... ✓
+moments... ✓
+trace_plot_cumulative... ✓
+mpi_standard_out...[skipped: no MPI std out files found]
+lcb... ✓
+gcb_progress... ✓
+logz_progress... ✓
+round_trip_progress... ✓
+pigeons_summary... ✓
+pigeons_inputs... ✓
+reproducibility_info...[skipped: missing reproducibility_command]
+Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-19-48-e1DnTryq</code></pre><h3 id="From-MCMCChains"><a class="docs-heading-anchor" href="#From-MCMCChains">From MCMCChains</a><a id="From-MCMCChains-1"></a><a class="docs-heading-anchor-permalink" href="#From-MCMCChains" title="Permalink"></a></h3><p><a href="https://github.com/TuringLang/MCMCChains.jl">MCMCChains.jl</a> is used  to store MCMC samples in packages such as <a href="https://github.com/TuringLang/Turing.jl">Turing.jl</a>. </p><p>Simply pass it into <code>report</code> to generate and open an HTML report:</p><pre><code class="language-julia hljs">using InferenceReport
 using Turing
 using MCMCChains
 
@@ -44,7 +57,7 @@ model = coinflip(; N=length(y)) | (; y)
 chain = sample(model, NUTS(), 100; progress=false)
 
 report(chain)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi"><span class="sgr36"><span class="sgr1">┌ Info: </span></span>Found initial step size
-<span class="sgr36"><span class="sgr1">└ </span></span>  ϵ = 1.6
+<span class="sgr36"><span class="sgr1">└ </span></span>  ϵ = 3.2
 target_description...[skipped: no description provided]
 pair_plot... ✓
 trace_plot... ✓
@@ -58,7 +71,7 @@ round_trip_progress...[skipped: only applies to Pigeons]
 pigeons_summary...[skipped: only applies to Pigeons]
 pigeons_inputs...[skipped: only applies to Pigeons]
 reproducibility_info...[skipped: missing reproducibility_command]
-Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-01-33-8YRqR3tl</code></pre><h2 id="Target-descriptions"><a class="docs-heading-anchor" href="#Target-descriptions">Target descriptions</a><a id="Target-descriptions-1"></a><a class="docs-heading-anchor-permalink" href="#Target-descriptions" title="Permalink"></a></h2><p>Two methods are available to specify descriptions for target  distributions. </p><p>First, a markdown description can be passed in as argument:</p><pre><code class="language-julia hljs">using InferenceReport
+Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-20-01-Sultr96b</code></pre><h2 id="Target-descriptions"><a class="docs-heading-anchor" href="#Target-descriptions">Target descriptions</a><a id="Target-descriptions-1"></a><a class="docs-heading-anchor-permalink" href="#Target-descriptions" title="Permalink"></a></h2><p>Two methods are available to specify descriptions for target  distributions. </p><p>First, a markdown description can be passed in as argument:</p><pre><code class="language-julia hljs">using InferenceReport
 using Pigeons
 
 target = toy_mvn_target(2)
@@ -74,8 +87,8 @@ report(pt;
 ────────────────────────────────────────────────────────────────────────────
   scans        Λ        time(s)    allc(B)  log(Z₁/Z₀)   min(α)     mean(α)
 ────────── ────────── ────────── ────────── ────────── ────────── ──────────
-        2      0.609   4.54e-05   1.14e+04      -1.68      0.705      0.932
-        4       1.28   6.24e-05    1.8e+04      -1.86      0.527      0.858
+        2      0.609   4.21e-05   1.14e+04      -1.68      0.705      0.932
+        4       1.28   6.33e-05    1.8e+04      -1.86      0.527      0.858
 ────────────────────────────────────────────────────────────────────────────
 Could not build traces: ErrorException(&quot;type NamedTuple has no field traces&quot;)
 target_description... ✓
@@ -91,7 +104,7 @@ round_trip_progress...[skipped: number restarts not recorded]
 pigeons_summary... ✓
 pigeons_inputs... ✓
 reproducibility_info...[skipped: missing reproducibility_command]
-Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-04-47-kOEK9w72</code></pre><p>But often, we may have a family of targets (e.g., in the above  example, normals  indexed by their dimensionality) and would like the  documentation to be automatically generated based on the parameters. </p><p>To do so, implement your own <a href="reference/#InferenceReport.pigeons_target_description-Tuple{Any}"><code>pigeons_target_description</code></a>  as done in the following example:</p><pre><code class="language-julia hljs">using InferenceReport
+Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-23-25-LZl9K2cz</code></pre><p>But often, we may have a family of targets (e.g., in the above  example, normals  indexed by their dimensionality) and would like the  documentation to be automatically generated based on the parameters. </p><p>To do so, implement your own <a href="reference/#InferenceReport.pigeons_target_description-Tuple{Any}"><code>pigeons_target_description</code></a>  as done in the following example:</p><pre><code class="language-julia hljs">using InferenceReport
 using Pigeons
 
 target = toy_mvn_target(2)
@@ -110,8 +123,8 @@ InferenceReport.pigeons_target_description(target::MyTargetType) =
 ────────────────────────────────────────────────────────────────────────────
   scans        Λ        time(s)    allc(B)  log(Z₁/Z₀)   min(α)     mean(α)
 ────────── ────────── ────────── ────────── ────────── ────────── ──────────
-        2      0.609   2.21e-05   1.14e+04      -1.68      0.705      0.932
-        4       1.28   2.85e-05    1.8e+04      -1.86      0.527      0.858
+        2      0.609   2.46e-05   1.14e+04      -1.68      0.705      0.932
+        4       1.28   2.69e-05    1.8e+04      -1.86      0.527      0.858
 ────────────────────────────────────────────────────────────────────────────</code></pre><h2 id="Reproducibility-instructions"><a class="docs-heading-anchor" href="#Reproducibility-instructions">Reproducibility instructions</a><a id="Reproducibility-instructions-1"></a><a class="docs-heading-anchor-permalink" href="#Reproducibility-instructions" title="Permalink"></a></h2><p>Simple Pigeons reproducibility instructions can be added to the generated page.  This is done via the <code>reproducibility_command</code> argument to <a href="reference/#InferenceReport.report-Tuple{Any, InferenceReport.ReportOptions}"><code>report</code></a>.  This should be a string showing how to create an  <a href="https://pigeons.run/dev/reference/#Pigeons.Inputs">Inputs</a> struct.  When <code>reproducibility_command</code> is provided, <code>InferenceReport</code> will  combine it to information queried in the current git repository to  attempt to string together a mini-script that can be used to reproduce the  result. </p><p>When the model is very simple, this can be done manually:</p><pre><code class="language-julia hljs">using InferenceReport
 using Pigeons
 
@@ -140,7 +153,7 @@ round_trip_progress...[skipped: number restarts not recorded]
 pigeons_summary... ✓
 pigeons_inputs... ✓
 reproducibility_info... ✓
-Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-04-51-Qz7Df27H</code></pre><p>However, this approach is not recommended as the duplicated code leads to  high risk that the reproducibility instruction drifts apart from the actual  command used. </p><p>To avoid this, we provide a macro, <code>@reproducible</code>, which, given an expression,  produces a pair containing the verbatim expression as well as its string value.  Using this we can rewrite the above as:</p><pre><code class="language-julia hljs">using InferenceReport
+Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-23-30-cY7kFO4D</code></pre><p>However, this approach is not recommended as the duplicated code leads to  high risk that the reproducibility instruction drifts apart from the actual  command used. </p><p>To avoid this, we provide a macro, <code>@reproducible</code>, which, given an expression,  produces a pair containing the verbatim expression as well as its string value.  Using this we can rewrite the above as:</p><pre><code class="language-julia hljs">using InferenceReport
 using Pigeons
 
 inputs, reproducibility_command =
@@ -169,7 +182,7 @@ round_trip_progress...[skipped: number restarts not recorded]
 pigeons_summary... ✓
 pigeons_inputs... ✓
 reproducibility_info... ✓
-Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-04-54-Ccl4hzQt</code></pre><h2 id="Adding-postprocessors"><a class="docs-heading-anchor" href="#Adding-postprocessors">Adding postprocessors</a><a id="Adding-postprocessors-1"></a><a class="docs-heading-anchor-permalink" href="#Adding-postprocessors" title="Permalink"></a></h2><p>Calling <code>report()</code> triggers a list of postprocessors, each creating a section  in the generated report. </p><p>To add a custom section in the report, first, create a function taking  as input the <a href="reference/#InferenceReport.PostprocessContext"><code>PostprocessContext</code></a> which contains all  required information such as the MCMC traces. </p><p>Here is an example of postprocessor outputting the number of dimensions:</p><pre><code class="language-julia hljs">using InferenceReport
+Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-23-33-c9SQFJzh</code></pre><h2 id="Adding-postprocessors"><a class="docs-heading-anchor" href="#Adding-postprocessors">Adding postprocessors</a><a id="Adding-postprocessors-1"></a><a class="docs-heading-anchor-permalink" href="#Adding-postprocessors" title="Permalink"></a></h2><p>Calling <code>report()</code> triggers a list of postprocessors, each creating a section  in the generated report. </p><p>To add a custom section in the report, first, create a function taking  as input the <a href="reference/#InferenceReport.PostprocessContext"><code>PostprocessContext</code></a> which contains all  required information such as the MCMC traces. </p><p>Here is an example of postprocessor outputting the number of dimensions:</p><pre><code class="language-julia hljs">using InferenceReport
 using MCMCChains
 import InferenceReport: get_chains, default_postprocessors, add_table, add_plot, add_markdown
 
@@ -191,10 +204,10 @@ pt = pigeons(
 report(pt; postprocessors = [report_dim; default_postprocessors()])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">───────────────────────────────────────────────────────────────────────────────────────
   scans     restarts      Λ        time(s)    allc(B)  log(Z₁/Z₀)   min(α)     mean(α)
 ────────── ────────── ────────── ────────── ────────── ────────── ────────── ──────────
-        2          0      0.609   2.88e-05   1.16e+04      -1.68      0.705      0.932
-        4          0       1.28   4.58e-05   1.84e+04      -1.86      0.527      0.858
-        8          0       1.39   7.27e-05   3.34e+04      -2.29      0.458      0.845
-       16          1       1.55   7.88e-05   5.82e+04      -2.27      0.646      0.828
+        2          0      0.609   3.27e-05   1.16e+04      -1.68      0.705      0.932
+        4          0       1.28   5.02e-05   1.84e+04      -1.86      0.527      0.858
+        8          0       1.39   4.81e-05   3.34e+04      -2.29      0.458      0.845
+       16          1       1.55   7.64e-05   5.82e+04      -2.27      0.646      0.828
 ───────────────────────────────────────────────────────────────────────────────────────
 report_dim... ✓
 target_description... ✓
@@ -210,4 +223,4 @@ round_trip_progress... ✓
 pigeons_summary... ✓
 pigeons_inputs... ✓
 reproducibility_info...[skipped: missing reproducibility_command]
-Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-04-55-fVXOFj7r</code></pre><p>Pull requests for additional postprocessors are welcome. </p><h2 id="Documenter.jl-integration"><a class="docs-heading-anchor" href="#Documenter.jl-integration">Documenter.jl integration</a><a id="Documenter.jl-integration-1"></a><a class="docs-heading-anchor-permalink" href="#Documenter.jl-integration" title="Permalink"></a></h2><p><strong>Note:</strong> at the moment, this feature is supported on <a href="https://github.com/Julia-Tempering/InferenceReport.jl/pull/25">Julia 1.10+ only</a>. </p><p>See our <a href="https://github.com/Julia-Tempering/InferenceReport.jl/blob/main/docs/make.jl">Documenter.jl make file</a> to see how to  integrate InferenceReport into a broader documentation page.  The key functions used are <a href="reference/#InferenceReport.headless-Tuple{Any}"><code>headless</code></a>,  <a href="reference/#InferenceReport.report_to_docs-Tuple{Any}"><code>report_to_docs</code></a> and  <a href="reference/#InferenceReport.as_doc_page-Tuple{Any}"><code>as_doc_page</code></a>. </p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="generated/toy_turing_unid_model/src/"><code>toy_turing_unid_model</code> »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.0 on <span class="colophon-date" title="Monday 15 April 2024 17:05">Monday 15 April 2024</span>. Using Julia version 1.10.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Report generated at: /home/runner/work/InferenceReport.jl/InferenceReport.jl/docs/build/results/all/2024-04-15-17-23-34-NTPNcWDP</code></pre><p>Pull requests for additional postprocessors are welcome. </p><h2 id="Documenter.jl-integration"><a class="docs-heading-anchor" href="#Documenter.jl-integration">Documenter.jl integration</a><a id="Documenter.jl-integration-1"></a><a class="docs-heading-anchor-permalink" href="#Documenter.jl-integration" title="Permalink"></a></h2><p><strong>Note:</strong> at the moment, this feature is supported on <a href="https://github.com/Julia-Tempering/InferenceReport.jl/pull/25">Julia 1.10+ only</a>. </p><p>See our <a href="https://github.com/Julia-Tempering/InferenceReport.jl/blob/main/docs/make.jl">Documenter.jl make file</a> to see how to  integrate InferenceReport into a broader documentation page.  The key functions used are <a href="reference/#InferenceReport.headless-Tuple{Any}"><code>headless</code></a>,  <a href="reference/#InferenceReport.report_to_docs-Tuple{Any}"><code>report_to_docs</code></a> and  <a href="reference/#InferenceReport.as_doc_page-Tuple{Any}"><code>as_doc_page</code></a>. </p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="generated/toy_turing_unid_model/src/"><code>toy_turing_unid_model</code> »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.0 on <span class="colophon-date" title="Monday 15 April 2024 17:23">Monday 15 April 2024</span>. Using Julia version 1.10.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

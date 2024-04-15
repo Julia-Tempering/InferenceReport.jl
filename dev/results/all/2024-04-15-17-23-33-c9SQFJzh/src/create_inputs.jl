@@ -8,4 +8,4 @@ Pkg.instantiate()
  
 
 using Pigeons
-inputs = Inputs(; target = Pigeons.stan_banana(2), variational = GaussianReference(first_tuning_round = 5), n_rounds = 10, record = [traces; round_trip; record_default()])
+inputs = Inputs(target = toy_mvn_target(1), n_rounds = 4, record = [traces])
