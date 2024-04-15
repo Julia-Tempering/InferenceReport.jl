@@ -30,18 +30,28 @@ end
 $SIGNATURES
 """
 function add_plot(context; file, title, url_help = nothing, description = "", movie = nothing)
-    info_link = isnothing(url_help) ? "" : """⏐<a href="$url_help">🔗 Info </a>"""
-    movie_link = isnothing(movie) ? "" : """⏐<a href="$movie">🍿 Movie </a>"""
-    add_markdown(context; 
-        title, 
-        contents = """
-            $description
-            ```@raw html
-            <iframe src="$file" style="height:500px;width:100%;"></iframe>
-            <a href="$file"> 🔍 Full page </a> $movie_link $info_link
-            ```
-            """
-    )
+    if context.options.writer isa Documenter.HTML
+        info_link = isnothing(url_help) ? "" : """⏐<a href="$url_help">🔗 Info </a>"""
+        movie_link = isnothing(movie) ? "" : """⏐<a href="$movie">🍿 Movie </a>"""
+        add_markdown(context; 
+            title, 
+            contents = """
+                $description
+                ```@raw html
+                <img src="$file" style="display: block; max-width:100%; max-height:500px; width:auto; height:auto;"/>
+                <a href="$file"> 🔍 Full page </a> $movie_link $info_link
+                ```
+                """
+        )
+    else
+        add_markdown(context; 
+            title, 
+            contents = """
+                $description
+                ![]($file)
+                """
+        )
+    end
 end
 
 """

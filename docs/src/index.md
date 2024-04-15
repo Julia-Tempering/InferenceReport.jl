@@ -54,6 +54,14 @@ See `Examples` in the left side bar to see examples of such reports.
 
 See [`report`](@ref) for more information on the options available. 
 
+You may also generate a TeX/PDF version using 
+Documenter.jl's [TeX support](https://documenter.juliadocs.org/stable/man/other-formats/) 
+as follows:
+
+```@example pigeons
+report(pt; writer=InferenceReport.Documenter.LaTeX(platform = "docker")) 
+```
+
 
 ### From MCMCChains 
 
@@ -238,4 +246,4 @@ See our [Documenter.jl make file](https://github.com/Julia-Tempering/InferenceRe
 integrate InferenceReport into a broader documentation page. 
 The key functions used are [`headless`](@ref), 
 [`report_to_docs`](@ref) and 
-[`as_doc_page`](@ref).
+[`as_doc_page`](@ref). 

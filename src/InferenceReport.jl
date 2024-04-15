@@ -1,6 +1,8 @@
 module InferenceReport
 
 using CairoMakie
+CairoMakie.activate!(type = "png", px_per_unit = 2)
+
 using Documenter
 using MCMCChains
 using PairPlots
@@ -121,8 +123,14 @@ as_doc_page(context) = "`$(target_name(context))`" => "generated/$(basename(dirn
 """
 $SIGNATURES 
 """
-view_webpage(exec_folder) = open_in_default_browser("$exec_folder/build/index.html")
-
+function view_webpage(exec_folder)
+    # Try to autodect if we built HTML or a PDF
+    if isfile("$exec_folder/build/InferenceReport.pdf")
+        open_in_default_browser("$exec_folder/build/InferenceReport.pdf")
+    else
+        open_in_default_browser("$exec_folder/build/index.html")
+    end
+end
 """
 $SIGNATURES 
 """
@@ -131,7 +139,7 @@ render(context) =
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
         repo="https://github.com/Julia-Tempering/Pigeons.jl/blob/{commit}{path}#{line}",
-        format = Documenter.HTML(size_threshold=nothing),
+        format = context.options.writer,
         pages = ["`$(target_name(context))`" => "index.md"])
 
 # Controls defaults such as whether to render and open webpage right away
