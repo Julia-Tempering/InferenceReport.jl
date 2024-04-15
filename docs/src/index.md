@@ -232,8 +232,10 @@ Pull requests for additional postprocessors are welcome.
 
 ## Documenter.jl integration 
 
+**Note:** at the moment, this feature is supported on [Julia 1.10+ only](https://github.com/Julia-Tempering/InferenceReport.jl/pull/25). 
+
 See our [Documenter.jl make file](https://github.com/Julia-Tempering/InferenceReport.jl/blob/main/docs/make.jl) to see how to 
 integrate InferenceReport into a broader documentation page. 
 The key functions used are [`headless`](@ref), 
 [`report_to_docs`](@ref) and 
-[`as_doc_page`](@ref).
+[`as_doc_page`](@ref). 

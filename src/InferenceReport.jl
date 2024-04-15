@@ -14,6 +14,7 @@ using Serialization
 using AlgebraOfGraphics
 using DocStringExtensions
 using JSON
+using Logging
 import Pigeons: @auto
 
 include("ReportOptions.jl")
@@ -67,6 +68,9 @@ function report(algo_or_chains, options::ReportOptions)
             println(" ✓")
         catch e 
             println("[skipped: $e]")
+            if options.show_error_traces 
+                @error "Details:" exception=(e, catch_backtrace())
+            end
         end
     end
 

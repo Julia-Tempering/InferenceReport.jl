@@ -21,3 +21,4 @@ report(pt)
 This will open in your browser the [following report](https://julia-tempering.github.io/InferenceReport.jl/dev/generated/toy_turing_unid_model/src/). 
 
 [For more information, see the documentation.](https://julia-tempering.github.io/InferenceReport.jl)
+
