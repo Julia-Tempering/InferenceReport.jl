@@ -60,6 +60,7 @@ as follows:
 
 ```@example pigeons
 report(pt; writer=InferenceReport.Documenter.LaTeX(platform = "docker")) 
+nothing # hide
 ```
 
 
