@@ -10,7 +10,8 @@
     context = report(pt; 
                 max_dim = 2,
                 view = false)
-    @test context.inference.truncated 
+    @test InferenceReport.istruncated(context.inference)
+    @test context.inference.original_dim == 5
     @test length(names(context.inference.chains, :parameters)) == 2
 
 
@@ -18,13 +19,15 @@
     context = report(chains; 
                 max_dim = 2,
                 view = false)
-    @test context.inference.truncated 
+    @test InferenceReport.istruncated(context.inference)
+    @test context.inference.original_dim == 5
     @test length(names(context.inference.chains, :parameters)) == 2
 
 
     context = report(pt; 
                 max_dim = 5,
                 view = false)
-    @test !context.inference.truncated 
+    @test context.inference.original_dim == 5
+    @test !InferenceReport.istruncated(context.inference) 
 
 end

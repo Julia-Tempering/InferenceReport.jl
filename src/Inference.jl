@@ -18,11 +18,14 @@ $FIELDS
     chains 
 
     """
-    If the parameters were truncated via options.max_dim
+    The original dimensionality of chains (the one stored might be truncated via options.max_dim)
     """
-    truncated::Bool
+    original_dim::Int
 end
-Inference(algo, ::Nothing) =  Inference(algo, nothing, false)
+
+istruncated(inference) = !isnothing(inference.chains) && length(names(inference.chains, :parameters)) < inference.original_dim
+
+Inference(algo, ::Nothing) =  Inference(algo, nothing, 0)
 Inference(algo, tuple::Tuple) = Inference(algo, tuple[1], tuple[2])
 
 Inference(result::Result{PT}, max_dim::Int) = Inference(Pigeons.load(result), max_dim)
@@ -40,9 +43,6 @@ build_chains(algorithm, max_dim) =
 
 function truncate_if_needed(chain, max_dim)
     params = names(chain, :parameters)
-    if length(params) > max_dim
-        return chain[params[1:max_dim]], true
-    else
-        return chain, false
-    end
+    result = length(params) > max_dim ? chain[params[1:max_dim]] : chain
+    return result, length(params)
 end
