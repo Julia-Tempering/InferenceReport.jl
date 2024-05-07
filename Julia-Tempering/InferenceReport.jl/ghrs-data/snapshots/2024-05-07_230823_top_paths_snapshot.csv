@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/Julia-Tempering/InferenceReport.jl/tree/main/src,8,1
+/Julia-Tempering/InferenceReport.jl,5,4
+/Julia-Tempering/InferenceReport.jl/blob/main/src/building_blocks.jl,2,1
+/Julia-Tempering/InferenceReport.jl/blob/main/src/Inference.jl,2,1
+/Julia-Tempering/InferenceReport.jl/blob/main/src/InferenceReport.jl,2,1
+/Julia-Tempering/InferenceReport.jl/blob/main/src/PostprocessContext.jl,2,1
+/Julia-Tempering/InferenceReport.jl/blob/main/src/processors.jl,2,1
+/Julia-Tempering/InferenceReport.jl/blob/main/src/ReportOptions.jl,2,1
+/Julia-Tempering/InferenceReport.jl/blob/main/src/utils.jl,2,1
+/Julia-Tempering/InferenceReport.jl/issues/28,1,1
