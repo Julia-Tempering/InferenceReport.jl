@@ -47,6 +47,14 @@ function current_position(sample_array, names, iteration_index::Int, chain_index
     return PairPlots.Truth((; zip(tuple_keys, tuple_values)...))
 end
 
+add_bib(context) = 
+    write(output_file(context, "bibliography", "md"), """
+        # Bibliography
+
+        ```@bibliography
+        ```
+        """)
+
 reproducibility_command(context, ::Nothing) = 
     """
     $(git_setup_string()) 

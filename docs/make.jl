@@ -36,7 +36,7 @@ function run_examples()
         inputs, reproducibility_command = 
             @reproducible Inputs(;
                 target = Pigeons.toy_turing_unid_target(), 
-                n_rounds = 10, 
+                n_rounds = 3, 
                 record = [traces; round_trip; record_default()])
         unid = report_to_docs(
             pigeons(inputs);
@@ -49,7 +49,7 @@ function run_examples()
             @reproducible Inputs(;
                 target = Pigeons.stan_funnel(2), 
                 variational = GaussianReference(first_tuning_round = 5),
-                n_rounds = 10, 
+                n_rounds = 3, 
                 record = [traces; round_trip; record_default()])
         funnel = report_to_docs(
             pigeons(inputs);
@@ -62,7 +62,7 @@ function run_examples()
             @reproducible Inputs(;
                 target = Pigeons.stan_banana(2), 
                 variational = GaussianReference(first_tuning_round = 5),
-                n_rounds = 10, 
+                n_rounds = 3, 
                 record = [traces; round_trip; record_default()])
         banana = report_to_docs(
             pigeons(inputs);
@@ -75,7 +75,7 @@ function run_examples()
             @reproducible Inputs(;
                 target = Pigeons.stan_eight_schools(), 
                 variational = GaussianReference(first_tuning_round = 5),
-                n_rounds = 10, 
+                n_rounds = 3, 
                 record = [traces; round_trip; record_default()])
         schools = report_to_docs(
             pigeons(inputs);
@@ -98,6 +98,7 @@ end
 # enclose the following in headless() to avoid useless render and 
 # also to avoid the pages opening in the browser when drafting
 headless() do
+    examples = run_examples()
     makedocs(;
         modules=[InferenceReport],
         authors="Miguel Biron-Lattes <miguel.biron@stat.ubc.ca>, Alexandre Bouchard-Côté <alexandre.bouchard@gmail.com>, Trevor Campbell <trevor@stat.ubc.ca>, Nikola Surjanovic <nikola.surjanovic@stat.ubc.ca>, Saifuddin Syed <saifuddin.syed@stats.ox.ac.uk>, Paul Tiede <ptiede91@gmail.com>",
@@ -111,10 +112,12 @@ headless() do
             assets=String[],
             size_threshold = nothing # overrides default size limit for a single html file
         ),
+        plugins = InferenceReport.make_doc_plugins(),
         pages=[
-            "User guide" => "index.md",
-            "Examples" => run_examples(),
-            "Reference" => "reference.md",
+            #"User guide" => "index.md",
+            "Examples" => examples,
+            #"Reference" => "reference.md",
+            "Bibliography" => "bibliography.md"
         ],
     )
 end

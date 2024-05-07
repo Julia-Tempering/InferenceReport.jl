@@ -17,6 +17,7 @@ using JSON
 using Logging
 import Pigeons: @auto
 using DataFrames
+using DocumenterCitations
 
 include("ReportOptions.jl")
 include("Inference.jl")
@@ -137,13 +138,19 @@ end
 """
 $SIGNATURES 
 """
-render(context) = 
+function render(context) 
+    add_bib(context)
     makedocs(;
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
-        repo="https://github.com/Julia-Tempering/Pigeons.jl/blob/{commit}{path}#{line}",
+        repo="https://github.com/Julia-Tempering/InferenceReport.jl/blob/{commit}{path}#{line}",
         format = context.options.writer,
-        pages = ["`$(target_name(context))`" => "index.md"])
+        plugins = InferenceReport.make_doc_plugins(),
+        pages = [
+            "`$(target_name(context))`" => "index.md", 
+            "Bibliography" => "bibliography.md"
+        ])
+end
 
 # Controls defaults such as whether to render and open webpage right away
 # Julia's isinteractive not good enough: returns true even inside Documenter.jl rendering pipeline
@@ -184,7 +191,8 @@ include("building_blocks.jl")
 include("utils.jl")
 include("processors.jl")
 include("make_index.jl")
+include("bib.jl")
 
-export report, @reproducible
+export report, @reproducible, cite!
 
 end # module
