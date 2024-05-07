@@ -66,6 +66,16 @@ function add_markdown(context; title, contents)
     push!(context.generated_markdown, markdown)
 end
 
+function add_note(context; type = "note", title, contents)
+    contents = join(map(x -> "\t$x", split(contents, "\n")), "\n")
+    markdown = """
+    !!! note "$title"
+
+    $contents
+    """
+    push!(context.generated_markdown, markdown)
+end
+
 function add_key_value(context, key, value) 
     if haskey(context.generated_dict, key) 
         @warn "key already in generated_dict: $key"

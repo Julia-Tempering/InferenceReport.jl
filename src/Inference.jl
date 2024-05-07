@@ -46,3 +46,15 @@ function truncate_if_needed(chain, max_dim)
     result = length(params) > max_dim ? chain[params[1:max_dim]] : chain
     return result, length(params)
 end
+
+function warn_if_truncated(context)
+    if istruncated(context.inference) 
+        add_note(context, 
+            title = "Truncation",
+            contents = """
+            For plotting, the dimensionality was truncated to the first $(context.options.max_dim) parameters. 
+            Before truncation, there were $(context.inference.original_dim) parameters. 
+            """
+        )
+    end
+end

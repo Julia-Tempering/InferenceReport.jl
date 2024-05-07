@@ -60,6 +60,8 @@ function report(algo_or_chains, options::ReportOptions)
     src_dir = mkpath("$(options.exec_folder)/src")
     context = PostprocessContext(inference, src_dir, String[], Dict{String,Any}(), options)
     add_key_value(context, "target_name", target_name(options.target_name, algo_or_chains))
+    add_key_value(context, "original_dim", inference.original_dim)
+    warn_if_truncated(context)
 
     for postprocessor in options.postprocessors 
         print("$postprocessor...")
