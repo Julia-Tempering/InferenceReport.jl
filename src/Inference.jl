@@ -16,16 +16,33 @@ $FIELDS
     struct. 
     """
     chains 
+
+    """
+    The original dimensionality of chains (the one stored might be truncated via options.max_dim)
+    """
+    original_dim::Int
 end
 
-Inference(result::Result{PT}) = Inference(Pigeons.load(result))
-Inference(algorithm) = Inference(algorithm, safely_build_chains(algorithm))
-Inference(chains::Chains) = Inference(nothing, chains)
+istruncated(inference) = !isnothing(inference.chains) && length(names(inference.chains, :parameters)) < inference.original_dim
 
-safely_build_chains(algorithm) = 
+Inference(algo, ::Nothing) =  Inference(algo, nothing, 0)
+Inference(algo, tuple::Tuple) = Inference(algo, tuple[1], tuple[2])
+
+Inference(result::Result{PT}, max_dim::Int) = Inference(Pigeons.load(result), max_dim)
+
+Inference(algorithm, max_dim::Int)      = Inference(algorithm, build_chains(algorithm, max_dim))
+Inference(chains::Chains, max_dim::Int) = Inference(nothing,   truncate_if_needed(chains, max_dim))
+
+build_chains(algorithm, max_dim) = 
     try 
-        Chains(algorithm) 
+        truncate_if_needed(Chains(algorithm), max_dim)
     catch e 
         println("Could not build traces: $e")
         nothing
     end
+
+function truncate_if_needed(chain, max_dim)
+    params = names(chain, :parameters)
+    result = length(params) > max_dim ? chain[params[1:max_dim]] : chain
+    return result, length(params)
+end

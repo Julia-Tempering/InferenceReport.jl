@@ -69,4 +69,11 @@ $FIELDS
     Useful for debugging, false by default. 
     """
     show_error_traces::Bool = false
+
+    """
+    Upper bound on the number of dimensions to process. If the number of 
+    dimensions exceed this bound, only the prefix of dimensions will be 
+    processed.  
+    """
+    max_dim::Int = 10
 end

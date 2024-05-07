@@ -231,7 +231,8 @@ get_pt(pt::PT) = pt
 """
 $SIGNATURES
 """
+
 get_chains(context) = 
     isnothing(context.inference.chains) ? 
-    throw("no traces provided (in Pigeons, use 'record = [traces])") :
-    context.inference.chains
+        throw("no traces provided (in Pigeons, use 'record = [traces])") :
+        context.inference.chains
