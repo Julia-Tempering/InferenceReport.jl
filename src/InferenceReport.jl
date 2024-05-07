@@ -55,7 +55,7 @@ report(algo_or_chains; args...) = report(algo_or_chains, ReportOptions(; args...
 $SIGNATURES
 """
 function report(algo_or_chains, options::ReportOptions) 
-    inference = Inference(algo_or_chains)
+    inference = Inference(algo_or_chains, options.max_dim)
 
     src_dir = mkpath("$(options.exec_folder)/src")
     context = PostprocessContext(inference, src_dir, String[], Dict{String,Any}(), options)
