@@ -16,6 +16,7 @@ using DocStringExtensions
 using JSON
 using Logging
 import Pigeons: @auto
+using DataFrames
 
 include("ReportOptions.jl")
 include("Inference.jl")
@@ -182,6 +183,7 @@ end
 include("building_blocks.jl")
 include("utils.jl")
 include("processors.jl")
+include("make_index.jl")
 
 export report, @reproducible
 
