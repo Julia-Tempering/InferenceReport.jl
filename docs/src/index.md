@@ -148,9 +148,9 @@ To create a bibliography, we provide automatic integration with
 [DocumenterCitations](https://juliadocs.org/DocumenterCitations.jl/stable/). 
 
 In the target description, use a syntax like 
-raw"""
+```
 `[bib_key](@citet)` 
-"""
+```
 to include a citation (see DocumenterCitations for 
 [more citation styles](https://juliadocs.org/DocumenterCitations.jl/stable/gallery/)). 
 Then pass the path to bibtex file(s) to 
