@@ -63,6 +63,7 @@ function report(algo_or_chains, options::ReportOptions)
     context = PostprocessContext(inference, src_dir, String[], Dict{String,Any}(), options)
     add_key_value(context, "target_name", target_name(options.target_name, algo_or_chains))
     add_key_value(context, "original_dim", inference.original_dim)
+    add_key_value(context, "bib_files", options.bib_files)
     warn_if_truncated(context)
 
     for postprocessor in options.postprocessors 
@@ -139,17 +140,15 @@ end
 $SIGNATURES 
 """
 function render(context) 
-    add_bib(context)
+    pages = ["`$(target_name(context))`" => "index.md"]
+    add_bib(context, pages)
     makedocs(;
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
         repo="https://github.com/Julia-Tempering/InferenceReport.jl/blob/{commit}{path}#{line}",
         format = context.options.writer,
-        plugins = InferenceReport.make_doc_plugins(),
-        pages = [
-            "`$(target_name(context))`" => "index.md", 
-            "Bibliography" => "bibliography.md"
-        ])
+        pages, 
+        plugins = make_doc_plugins(context.options.bib_files))
 end
 
 # Controls defaults such as whether to render and open webpage right away
@@ -191,7 +190,6 @@ include("building_blocks.jl")
 include("utils.jl")
 include("processors.jl")
 include("make_index.jl")
-include("bib.jl")
 
 export report, @reproducible, cite!
 

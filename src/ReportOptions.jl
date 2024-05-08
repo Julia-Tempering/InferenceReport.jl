@@ -76,4 +76,9 @@ $FIELDS
     processed.  
     """
     max_dim::Int = 10
+
+    """
+    Set of bib files to use for model descriptions.  
+    """
+    bib_files::Vector{String} = []
 end

@@ -47,13 +47,32 @@ function current_position(sample_array, names, iteration_index::Int, chain_index
     return PairPlots.Truth((; zip(tuple_keys, tuple_values)...))
 end
 
-add_bib(context) = 
-    write(output_file(context, "bibliography", "md"), """
-        # Bibliography
+function add_bib(context, pages)
+    if !isempty(context.options.bib_files)
+        push!(pages, "Bibliography" => "bibliography.md") 
+        write(output_file(context, "bibliography", "md"), """
+            # Bibliography
 
-        ```@bibliography
-        ```
-        """)
+            ```@bibliography
+            ```
+            """)
+    end
+end
+
+make_doc_plugins(bib_files) = make_doc_plugins(Set{String}(bib_files))
+function make_doc_plugins(bib_files::Set{String})
+    if isempty(bib_files)
+        return []
+    end
+    temp = tempname()
+    for bib_file in bib_files 
+        write(temp, read(bib_file, String) * "\n")
+    end
+    bib = CitationBibliography(temp; style = :authoryear)
+    return [bib]
+end
+
+
 
 reproducibility_command(context, ::Nothing) = 
     """
