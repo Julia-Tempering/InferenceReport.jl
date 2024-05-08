@@ -83,6 +83,12 @@ function add_key_value(context, key, value)
     context.generated_dict[key] = value
 end
 
+function add_bib(context)
+    biblio = """
+    
+    """
+end
+
 """
 $SIGNATURES 
 """
@@ -155,6 +161,8 @@ pigeons_target_description(target, ::Val{:toy_turing_unid_model}) =
     making sampling difficult, as shown in the following pair plots.
     """
 
+const example_bib = dirname(dirname(pathof(InferenceReport))) * "/test/supporting/refs.bib"
+
 function pigeons_target_description(target, ::Val{:funnel_model})
     # StanLogPotential's data is a bit more ackward to access:
     data = JSON.parse(target.data.data) 
@@ -162,7 +170,7 @@ function pigeons_target_description(target, ::Val{:funnel_model})
     scale = data["scale"]
     """
     A synthetic target introduced 
-    in [Neal, 2004](https://projecteuclid.org/journals/annals-of-statistics/volume-31/issue-3/Slice-sampling/10.1214/aos/1056562461.full)
+    in [neal_slice_2003](@citet)
     to benchmark algorithms on situations where the local curvature of the target density 
     varies from one part of the space to another. Specifically, the shape of the target 
     (see pair plots below) is such that when ``y < 0``, the posterior is very narrow 
@@ -201,7 +209,7 @@ function pigeons_target_description(target, ::Val{:banana_model})
     """
     A common synthetic distribution used to benchmark MCMC methods. 
     For details on this implementation, 
-    see [Pagani et al., 2021, Section 3](https://doi.org/10.1111/sjos.12532). 
+    see [pagani_n-dimensional_2022](@citet). 
 
     Here we use the values: 
 
@@ -216,9 +224,9 @@ end
 
 pigeons_target_description(target, ::Val{:eight_schools_centered_model}) =
     """
-    A common posterior distribution, based on data from [Rubin, 1981](https://www.jstor.org/stable/1164617)
+    A common posterior distribution, based on data from [rubin_estimation_1981](@citet)
     used to to illustrate hierarchical 
-    modelling [Gelman et al, 2013](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf). 
+    modelling [gelman_bayesian_2013](@citet). 
     It is also used to benchmark MCMC methods, 
     due to a mild "funnel-type" behaviour.  
     The terminology 'centered' refers to the original parameterization, to 

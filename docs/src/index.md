@@ -142,6 +142,42 @@ nothing #hide
 ```
 
 
+## Adding references to a bibliography
+
+To create a bibliography, we provide automatic integration with 
+[DocumenterCitations](https://juliadocs.org/DocumenterCitations.jl/stable/). 
+
+In the target description, use a syntax like 
+```
+[bib_key](@citet)
+```
+to include a citation (see DocumenterCitations for 
+[more citation styles](https://juliadocs.org/DocumenterCitations.jl/stable/gallery/)). 
+Then pass the path to bibtex file(s) to 
+`report`'s  `bib_files` argument (takes a vector of strings). 
+
+```@example bib
+using InferenceReport
+using Pigeons
+
+target = toy_mvn_target(2)
+pt = pigeons(; target, n_rounds = 2)
+
+report(pt; 
+    bib_files = [InferenceReport.example_bib],
+    target_description = 
+        """
+        The model description can use math: ``x^2``.
+        Citation: [neal_slice_2003](@citet)
+        """)
+
+nothing #hide
+```
+
+See `Examples` in the left side bar to see examples of linked bibliographic 
+items. 
+
+
 ## Reproducibility instructions 
 
 Simple Pigeons reproducibility instructions can be added to the generated page. 
@@ -153,28 +189,10 @@ combine it to information queried in the current git repository to
 attempt to string together a mini-script that can be used to reproduce the 
 result. 
 
-When the model is very simple, this can be done manually:
-
-```@example repro 
-using InferenceReport
-using Pigeons 
-
-inputs = Inputs(target = toy_mvn_target(1), n_rounds = 4, record = [traces])
-pt = pigeons(inputs)
-
-report(pt; 
-    reproducibility_command = "Inputs(target = toy_mvn_target(1), n_rounds = 4, record = [traces])") 
-
-nothing # hide
-```
-
-However, this approach is not recommended as the duplicated code leads to 
-high risk that the reproducibility instruction drifts apart from the actual 
-command used. 
-
-To avoid this, we provide a macro, `@reproducible`, which, given an expression, 
+To help filling `reproducibility_command`, we provide a macro, 
+`@reproducible`, which, given an expression, 
 produces a pair containing the verbatim expression as well as its string value. 
-Using this we can rewrite the above as:
+Here his an example:
 
 ```@example macro 
 using InferenceReport
@@ -189,6 +207,9 @@ report(pt; reproducibility_command)
 
 nothing # hide
 ```
+
+
+
 
 
 ## Adding postprocessors 

@@ -17,6 +17,7 @@ using JSON
 using Logging
 import Pigeons: @auto
 using DataFrames
+using DocumenterCitations
 
 include("ReportOptions.jl")
 include("Inference.jl")
@@ -62,6 +63,7 @@ function report(algo_or_chains, options::ReportOptions)
     context = PostprocessContext(inference, src_dir, String[], Dict{String,Any}(), options)
     add_key_value(context, "target_name", target_name(options.target_name, algo_or_chains))
     add_key_value(context, "original_dim", inference.original_dim)
+    add_key_value(context, "bib_files", options.bib_files)
     warn_if_truncated(context)
 
     for postprocessor in options.postprocessors 
@@ -137,13 +139,17 @@ end
 """
 $SIGNATURES 
 """
-render(context) = 
+function render(context) 
+    pages = ["`$(target_name(context))`" => "index.md"]
+    add_bib(context, pages)
     makedocs(;
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
-        repo="https://github.com/Julia-Tempering/Pigeons.jl/blob/{commit}{path}#{line}",
+        repo="https://github.com/Julia-Tempering/InferenceReport.jl/blob/{commit}{path}#{line}",
         format = context.options.writer,
-        pages = ["`$(target_name(context))`" => "index.md"])
+        pages, 
+        plugins = make_doc_plugins(context.options.bib_files))
+end
 
 # Controls defaults such as whether to render and open webpage right away
 # Julia's isinteractive not good enough: returns true even inside Documenter.jl rendering pipeline
@@ -185,6 +191,6 @@ include("utils.jl")
 include("processors.jl")
 include("make_index.jl")
 
-export report, @reproducible
+export report, @reproducible, cite!
 
 end # module
