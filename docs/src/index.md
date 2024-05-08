@@ -149,7 +149,7 @@ To create a bibliography, we provide automatic integration with
 
 In the target description, use a syntax like 
 ```
-`[bib_key](@citet)` 
+[bib_key](@citet)
 ```
 to include a citation (see DocumenterCitations for 
 [more citation styles](https://juliadocs.org/DocumenterCitations.jl/stable/gallery/)). 
