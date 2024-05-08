@@ -174,7 +174,8 @@ report(pt;
 nothing #hide
 ```
 
-See `Examples` in the left side bar to see examples of linked bibliographic 
+See `funnel_model` and `Bibliography` in the navigation bar to see examples 
+of linked bibliographic 
 items. 
 
 
