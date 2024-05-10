@@ -145,7 +145,7 @@ function render(context)
     makedocs(;
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
-        repo="https://github.com/Julia-Tempering/InferenceReport.jl/blob/{commit}{path}#{line}",
+        remotes = nothing,
         format = context.options.writer,
         pages, 
         plugins = make_doc_plugins(context.options.bib_files))
