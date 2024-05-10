@@ -1,0 +1,12 @@
+{
+    "target_name": "Pigeons.ScaledPrecisionNormalPath(1.0, 10.0, 1)",
+    "current_commit": "abf9f0de20a6046d487af13562fccebc5cb0f4c3",
+    "cloned_name": "InferenceReport.jl",
+    "original_dim": 1,
+    "gcb": 0.6864377588831496,
+    "remote_repo": "https://github.com/Julia-Tempering/InferenceReport.jl",
+    "reproducibility_command": "run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)\ncd(\"InferenceReport.jl\")\nrun(`git checkout abf9f0de20a6046d487af13562fccebc5cb0f4c3`)\n\nusing Pkg \nPkg.activate(\".\")\nPkg.instantiate()\n \n\nusing Pigeons\ninputs = Inputs(target = toy_mvn_target(1), n_rounds = 4, record = [traces])\n \n\npt = pigeons(inputs)\n",
+    "bib_files": [],
+    "logz": -1.3491244009307835,
+    "reproducibility_command_inputs": "Inputs(target = toy_mvn_target(1), n_rounds = 4, record = [traces])"
+}
