@@ -1,8 +1,9 @@
 @testset "PDF output" begin
+    # using platform="native" is not great because it assumes various dependencies
+    # are installed (e.g. pygmentize)
+    if Sys.which("docker") === nothing
 
-    if (get(ENV, "CI", "false") == "true") && !Sys.islinux()
-
-        @warn "on github action CI, docker available out of the box on linux only"
+        @warn "docker not found; skipping test."
 
     else
 
