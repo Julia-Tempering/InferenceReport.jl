@@ -1,7 +1,8 @@
 @testset "PDF output" begin
-    # using platform="native" is not great because it assumes various dependencies
+    # stop if docker is not installed or if inside a Windows gh runner (broken docker install).
+    # note: using platform="native" is not great because it assumes various dependencies
     # are installed (e.g. pygmentize)
-    if Sys.which("docker") === nothing
+    if is_windows_in_CI() || Sys.which("docker") === nothing
 
         @warn "docker not found; skipping test."
 
