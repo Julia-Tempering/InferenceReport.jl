@@ -14,7 +14,7 @@ function open_in_default_browser(url::AbstractString)::Bool
             return true
         elseif Sys.islinux()
             browser = "xdg-open"
-            if isfile(browser)
+            if Sys.which(browser) !== nothing
                 Base.run(`$browser $url`)
                 return true
             else

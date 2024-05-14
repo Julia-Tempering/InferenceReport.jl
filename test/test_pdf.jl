@@ -1,8 +1,10 @@
 @testset "PDF output" begin
+    # stop if docker is not installed or if inside a Windows gh runner (broken docker install).
+    # note: using platform="native" is not great because it assumes various dependencies
+    # are installed (e.g. pygmentize)
+    if is_windows_in_CI() || Sys.which("docker") === nothing
 
-    if (get(ENV, "CI", "false") == "true") && !Sys.islinux()
-
-        @warn "on github action CI, docker available out of the box on linux only"
+        @warn "docker not found; skipping test."
 
     else
 

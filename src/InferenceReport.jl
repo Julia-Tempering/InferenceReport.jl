@@ -142,14 +142,25 @@ $SIGNATURES
 function render(context) 
     pages = ["`$(target_name(context))`" => "index.md"]
     add_bib(context, pages)
-    makedocs(;
+    makedocs_kwargs = (;
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
-        repo="https://github.com/Julia-Tempering/InferenceReport.jl/blob/{commit}{path}#{line}",
         format = context.options.writer,
         pages, 
-        plugins = make_doc_plugins(get_bib(context))
+        plugins = make_doc_plugins(get_bib(context)) 
     )
+    try
+        makedocs(; makedocs_kwargs...)
+    catch e
+        if e isa ArgumentError && startswith(e.msg, "Unable to automatically determine remote")
+            @warn """
+            Documenter could not find a repo. Re-trying with `remotes = nothing`.
+            """
+            makedocs(; remotes = nothing, makedocs_kwargs...)
+        else
+            rethrow(e)
+        end
+    end
 end
 
 # Controls defaults such as whether to render and open webpage right away
