@@ -96,7 +96,7 @@ nothing # hide
 Two methods are available to specify descriptions for target 
 distributions. 
 
-First, a markdown description can be passed in as argument:
+First, a [`TargetDescription`](@ref) can be passed in as argument:
 
 ```@example descriptions
 using InferenceReport
@@ -105,16 +105,16 @@ using Pigeons
 target = toy_mvn_target(2)
 pt = pigeons(; target, n_rounds = 2)
 
-report(pt; 
-    target_description = 
-        """
-        The model description can use math: ``x^2``. 
-        """)
+target_description = TargetDescription(
+    text = """
+    The model description can use math: ``x^2``. 
+    """)
+report(pt; target_description)
 
 nothing #hide
 ```
 
-But often, we may have a family of targets (e.g., in the above 
+Sometimes we may have a family of targets (e.g., in the above 
 example, normals 
 indexed by their dimensionality) and would like the 
 documentation to be automatically generated based on the parameters. 
@@ -130,13 +130,14 @@ target = toy_mvn_target(2)
 pt = pigeons(; target, n_rounds = 2)
 
 const MyTargetType = typeof(target)
-InferenceReport.pigeons_target_description(target::MyTargetType) = 
-    """
+InferenceReport.pigeons_target_description(target::MyTargetType) = TargetDescription(
+    text = """
     Some description. 
 
     It can use information in the target, e.g. here 
     to report that its dimension is: $(target.dim)
     """
+)
 
 nothing #hide
 ```
@@ -147,14 +148,14 @@ nothing #hide
 To create a bibliography, we provide automatic integration with 
 [DocumenterCitations](https://juliadocs.org/DocumenterCitations.jl/stable/). 
 
-In the target description, use a syntax like 
+In the target description's text, use a syntax like 
 ```
 [bib_key](@citet)
 ```
 to include a citation (see DocumenterCitations for 
 [more citation styles](https://juliadocs.org/DocumenterCitations.jl/stable/gallery/)). 
-Then pass the path to bibtex file(s) to 
-`report`'s  `bib_files` argument (takes a vector of strings). 
+Then pass include the contents of bibtex file to 
+[`pigeons_target_description`](@ref)'s  `bibliography` argument.
 
 ```@example bib
 using InferenceReport
@@ -164,12 +165,13 @@ target = toy_mvn_target(2)
 pt = pigeons(; target, n_rounds = 2)
 
 report(pt; 
-    bib_files = [InferenceReport.example_bib],
-    target_description = 
-        """
+    target_description = TargetDescription(
+        text = """
         The model description can use math: ``x^2``.
         Citation: [neal_slice_2003](@citet)
-        """)
+        """, 
+        bibliography = InferenceReport.example_bib()
+    ))
 
 nothing #hide
 ```
@@ -208,8 +210,6 @@ report(pt; reproducibility_command)
 
 nothing # hide
 ```
-
-
 
 
 

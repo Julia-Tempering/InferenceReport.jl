@@ -21,11 +21,13 @@ $FIELDS
     target_name::Union{String, Nothing} = nothing
 
     """
-    Extended description of the target. If nothing, will attempt to 
+    Description of the target, specified 
+    using a [`TargetDescription`](@ref). 
+    If `nothing`, will attempt to 
     auto-detect it via [`target_description`](@ref) 
     and [`pigeons_target_description`](@ref).
     """
-    target_description::Union{String, Nothing} = nothing
+    target_description::Union{TargetDescription, Nothing} = nothing
 
     """
     If true, the report webpage's md files are rendered into html files.
@@ -76,9 +78,4 @@ $FIELDS
     processed.  
     """
     max_dim::Int = 10
-
-    """
-    Set of bib files to use for model descriptions.  
-    """
-    bib_files::Vector{String} = []
 end
