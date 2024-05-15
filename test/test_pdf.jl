@@ -19,7 +19,7 @@
         context = report(pt; 
                     view = false,
                     writer=InferenceReport.Documenter.LaTeX(platform = "docker"),
-                    target_description = "Description",
+                    target_description = TargetDescription(text = "Description"),
                     reproducibility_command)
 
         @test isfile("$(context.options.exec_folder)/build/InferenceReport.pdf")

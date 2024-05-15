@@ -23,15 +23,15 @@ function make_index(collection)
 end
 
 # get all unique bib files from a collection 
-function bib_files(collection) 
+function merge_bibliography(collection) 
     result = Set{String}() 
     process_collection(collection) do _, info
-        current = info["bib_files"]
-        for item in current 
-            push!(result, item) 
+        bib = get(info, "bibliography", nothing)
+        if !isnothing(bib)
+            push!(result, bib)
         end
     end
-    return result
+    return join(result, "\n")
 end
 
 function process_collection(lambda::Function, collection)

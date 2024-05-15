@@ -111,7 +111,7 @@ headless() do
             assets=String[],
             size_threshold = nothing # overrides default size limit for a single html file
         ),
-        plugins = InferenceReport.make_doc_plugins([InferenceReport.example_bib]),
+        plugins = InferenceReport.make_doc_plugins(InferenceReport.example_bib()),
         pages=[
             "User guide" => "index.md",
             "Examples" => run_examples(),

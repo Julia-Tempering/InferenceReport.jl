@@ -19,6 +19,7 @@ import Pigeons: @auto
 using DataFrames
 using DocumenterCitations
 
+include("TargetDescription.jl")
 include("ReportOptions.jl")
 include("Inference.jl")
 include("PostprocessContext.jl") 
@@ -63,7 +64,6 @@ function report(algo_or_chains, options::ReportOptions)
     context = PostprocessContext(inference, src_dir, String[], Dict{String,Any}(), options)
     add_key_value(context, "target_name", target_name(options.target_name, algo_or_chains))
     add_key_value(context, "original_dim", inference.original_dim)
-    add_key_value(context, "bib_files", options.bib_files)
     warn_if_truncated(context)
 
     for postprocessor in options.postprocessors 
@@ -146,8 +146,8 @@ function render(context)
         root = dirname(context.output_directory),
         sitename = "InferenceReport",
         format = context.options.writer,
-        pages = pages, 
-        plugins = make_doc_plugins(context.options.bib_files)
+        pages, 
+        plugins = make_doc_plugins(get_bib(context)) 
     )
     try
         makedocs(; makedocs_kwargs...)
@@ -203,6 +203,6 @@ include("utils.jl")
 include("processors.jl")
 include("make_index.jl")
 
-export report, @reproducible, cite!
+export report, @reproducible, cite!, TargetDescription
 
 end # module

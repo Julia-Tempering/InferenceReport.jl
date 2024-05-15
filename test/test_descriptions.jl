@@ -3,12 +3,15 @@ using DynamicPPL
 
 @testset "Hard coded description" begin
     pt = pigeons(target = Pigeons.toy_turing_unid_target(), n_rounds = 2)
+    target_description = TargetDescription(
+        text = """
+        The model description can use math: ``x^2``. 
+        """
+    )
     r = report(pt; 
             view = false, 
-            target_description = 
-            """
-            The model description can use math: ``x^2``. 
-            """)
+            target_description
+            )
     @test contains(r.generated_markdown[1], "The model description can use math")
 end
 
@@ -17,13 +20,13 @@ end
     pt = pigeons(; target, n_rounds = 2)
 
     MyTargetType = typeof(target)
-    InferenceReport.pigeons_target_description(target::MyTargetType) = 
-        """
+    InferenceReport.pigeons_target_description(target::MyTargetType) = TargetDescription( 
+        text = """
         Some description. 
 
         It can use information in the target, e.g. here 
         to report that its dimension is: $(target.dim)
-        """
+        """)  
 
     r = report(pt; 
             view = false,)

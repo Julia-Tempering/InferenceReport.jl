@@ -83,12 +83,6 @@ function add_key_value(context, key, value)
     context.generated_dict[key] = value
 end
 
-function add_bib(context)
-    biblio = """
-    
-    """
-end
-
 """
 $SIGNATURES 
 """
@@ -108,15 +102,18 @@ pigeons_target_name(target) = string(target)
 """
 $SIGNATURES 
 """
-target_description(context::PostprocessContext) = 
+function target_description(context::PostprocessContext)
+    description = target_description(context.options.target_description, context.inference.algorithm)
+    add_key_value(context, "bibliography", description.bibliography)
     add_markdown(context; 
         title = "Description", 
-        contents = target_description(context.options.target_description, context.inference.algorithm)
+        contents = description.text
     )
+end
 
 target_description(unspecified_description::Nothing, pt::PT) = pigeons_target_description(pt.inputs.target)
 target_description(unspecified_description::Nothing, _) = throw("no description provided")
-target_description(specified_description::String, _) = specified_description 
+target_description(specified_description::TargetDescription, _) = specified_description
 
 """
 $SIGNATURES 
@@ -129,7 +126,10 @@ pigeons_target_description(target, _) = throw("no description provided")
 
 # Some examples below of how to create description:
 
-pigeons_target_description(target, ::Val{:toy_turing_unid_model}) =
+pigeons_target_description(target, ::Val{:toy_turing_unid_model}) = TargetDescription(
+    keywords = ["pigeons builtin"],
+    bibliography = example_bib(),
+    text = 
     """
     Consider a Bayesian model where the likelihood is a binomial distribution with probability parameter ``p``. 
     Let us consider an over-parameterized model where we 
@@ -160,45 +160,50 @@ pigeons_target_description(target, ::Val{:toy_turing_unid_model}) =
     unidentifiable models concentrate on a sub-manifold, 
     making sampling difficult, as shown in the following pair plots.
     """
+    )
 
-const example_bib = dirname(dirname(pathof(InferenceReport))) * "/test/supporting/refs.bib"
+example_bib() = read(dirname(dirname(pathof(InferenceReport))) * "/test/supporting/refs.bib", String)
 
 function pigeons_target_description(target, ::Val{:funnel_model})
     # StanLogPotential's data is a bit more ackward to access:
     data = JSON.parse(target.data.data) 
     dim = data["dim"]
     scale = data["scale"]
-    """
-    A synthetic target introduced 
-    in [neal_slice_2003](@citet)
-    to benchmark algorithms on situations where the local curvature of the target density 
-    varies from one part of the space to another. Specifically, the shape of the target 
-    (see pair plots below) is such that when ``y < 0``, the posterior is very narrow 
-    while for ``y > 0`` it is wide. 
+    return TargetDescription(
+        keywords = ["pigeons builtin"],
+        bibliography = example_bib(),
+        text = 
+        """
+        A synthetic target introduced 
+        in [neal_slice_2003](@citet)
+        to benchmark algorithms on situations where the local curvature of the target density 
+        varies from one part of the space to another. Specifically, the shape of the target 
+        (see pair plots below) is such that when ``y < 0``, the posterior is very narrow 
+        while for ``y > 0`` it is wide. 
 
-    The funnel is formally defined as follows:
-    
-    ```math
-    \\begin{aligned}
-    y &\\sim \\text{Normal}(0, 3) \\\\
-    x_i &\\sim \\text{Normal}(0, \\exp(y / \\text{scale})) \\;\\text{ for }i \\in \\{1, \\dots, d\\}  \\\\
-    \\end{aligned}
-    ```
+        The funnel is formally defined as follows:
+        
+        ```math
+        \\begin{aligned}
+        y &\\sim \\text{Normal}(0, 3) \\\\
+        x_i &\\sim \\text{Normal}(0, \\exp(y / \\text{scale})) \\;\\text{ for }i \\in \\{1, \\dots, d\\}  \\\\
+        \\end{aligned}
+        ```
 
-    Here we use the values: 
+        Here we use the values: 
 
-    | Parameter                           | Value                            | 
-    |:----------------------------------- | :------------------------------- |
-    | Number of "``x``" dimensions, ``d`` | $(dim)                           |
-    | Scale factor                        | $(scale)                         |
-    
-    While the example is artificial, it is useful since it combines certain features 
-    present in many real challenging targets (varying local curvature), while having 
-    known moments for the difficult dimension to explore, ``y`` (since ``y`` is 
-    marginally a normal distribution with known moments). 
+        | Parameter                           | Value                            | 
+        |:----------------------------------- | :------------------------------- |
+        | Number of "``x``" dimensions, ``d`` | $(dim)                           |
+        | Scale factor                        | $(scale)                         |
+        
+        While the example is artificial, it is useful since it combines certain features 
+        present in many real challenging targets (varying local curvature), while having 
+        known moments for the difficult dimension to explore, ``y`` (since ``y`` is 
+        marginally a normal distribution with known moments). 
 
-    [Stan implementation](https://github.com/Julia-Tempering/Pigeons.jl/blob/main/examples/stan/funnel.stan)
-    """
+        [Stan implementation](https://github.com/Julia-Tempering/Pigeons.jl/blob/main/examples/stan/funnel.stan)
+        """)
 end
 
 function pigeons_target_description(target, ::Val{:banana_model})
@@ -206,23 +211,31 @@ function pigeons_target_description(target, ::Val{:banana_model})
     data = JSON.parse(target.data.data) 
     dim = data["dim"]
     scale = data["scale"]
-    """
-    A common synthetic distribution used to benchmark MCMC methods. 
-    For details on this implementation, 
-    see [pagani_n-dimensional_2022](@citet). 
+    return TargetDescription(
+        keywords = ["pigeons builtin"],
+        bibliography = example_bib(),
+        text = 
+        """
+        A common synthetic distribution used to benchmark MCMC methods. 
+        For details on this implementation, 
+        see [pagani_n-dimensional_2022](@citet). 
 
-    Here we use the values: 
+        Here we use the values: 
 
-    | Parameter                           | Value                            | 
-    |:----------------------------------- | :------------------------------- |
-    | Number of "``y``" dimensions, ``d`` | $(dim)                           |
-    | Scale factor                        | $(scale)                         |
+        | Parameter                           | Value                            | 
+        |:----------------------------------- | :------------------------------- |
+        | Number of "``y``" dimensions, ``d`` | $(dim)                           |
+        | Scale factor                        | $(scale)                         |
 
-    [Stan implementation](https://github.com/Julia-Tempering/Pigeons.jl/blob/main/examples/stan/banana.stan)
-    """
+        [Stan implementation](https://github.com/Julia-Tempering/Pigeons.jl/blob/main/examples/stan/banana.stan)
+        """
+    )
 end
 
-pigeons_target_description(target, ::Val{:eight_schools_centered_model}) =
+pigeons_target_description(target, ::Val{:eight_schools_centered_model}) = TargetDescription(
+    keywords = ["pigeons builtin"],
+    bibliography = example_bib(),
+    text = 
     """
     A common posterior distribution, based on data from [rubin_estimation_1981](@citet)
     used to to illustrate hierarchical 
@@ -236,6 +249,7 @@ pigeons_target_description(target, ::Val{:eight_schools_centered_model}) =
     [Stan implementation](https://github.com/Julia-Tempering/Pigeons.jl/blob/main/examples/stan/eight_schools_centered.stan)
     [Data](https://github.com/Julia-Tempering/Pigeons.jl/blob/main/examples/stan/eight_schools.json)
     """
+    )
 
 
 """

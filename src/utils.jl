@@ -47,8 +47,10 @@ function current_position(sample_array, names, iteration_index::Int, chain_index
     return PairPlots.Truth((; zip(tuple_keys, tuple_values)...))
 end
 
+get_bib(context) = get(context.generated_dict, "bibliography", nothing)
+has_bib(context) = !isnothing(get_bib(context))
 function add_bib(context, pages)
-    if !isempty(context.options.bib_files)
+    if has_bib(context)
         push!(pages, "Bibliography" => "bibliography.md") 
         write(output_file(context, "bibliography", "md"), """
             # Bibliography
@@ -59,24 +61,17 @@ function add_bib(context, pages)
     end
 end
 
-make_doc_plugins(bib_files) = make_doc_plugins(Set{String}(bib_files))
-function make_doc_plugins(bib_files::Set{String})
-    if isempty(bib_files)
-        return []
-    end
+make_doc_plugins(bibliography::Nothing) = []
+function make_doc_plugins(bibliography::String)
     temp = tempname()
-    for bib_file in bib_files 
-        write(temp, read(bib_file, String) * "\n")
-    end
+    write(temp, bibliography)
     bib = CitationBibliography(temp; style = :authoryear)
     return [bib]
 end
 
-
-
 reproducibility_command(context, ::Nothing) = 
     """
-    $(git_setup_string()) 
+    $(git_setup_string(context)) 
     chains = $(context.options.reproducibility_command)
     """
     
