@@ -22,7 +22,7 @@ PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 Serialization = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
 
 [compat]
-AlgebraOfGraphics = "0.6, 0.7"
+AlgebraOfGraphics = "0.6, 0.7, 0.8"
 CSV = "0.10"
 CairoMakie = "0.11, 0.12"
 DataFrames = "1"
