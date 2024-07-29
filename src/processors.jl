@@ -326,3 +326,24 @@ function pigeons_progress(context; property, title, args...)
         title, 
         args...)
 end
+"""
+$SIGNATURES
+A plot showing progression of mean swap acceptance per chain as a function of round.
+"""
+function swaps_plot(context)
+    swaps = get_pt(context).shared.reports.swap_prs
+    swaps[!,"first"] = string.(swaps[!,"first"])
+
+    fig = Figure()
+    plt = data(swaps) * mapping(:round => "Round", :mean => "Mean", marker = :first, color = :first) * visual(AlgebraOfGraphics.ScatterLines)
+    
+    draw!(fig, plt, axis=(title="Swap Acceptance Rates per Chain",))
+
+    file = output_file(context, "swaps_plot", "png")
+    CairoMakie.save(file, fig, px_per_unit = 2)
+    
+
+    add_plot(context;
+    file = "swaps_plot.png",
+    title = "Swaps plot")
+end
