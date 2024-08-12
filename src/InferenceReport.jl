@@ -38,6 +38,7 @@ default_postprocessors() = [
     gcb_progress,
     logz_progress,
     round_trip_progress,
+    swaps_plot,
     pigeons_summary,
     pigeons_inputs,
     reproducibility_info
