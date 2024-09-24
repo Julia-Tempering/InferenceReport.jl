@@ -144,7 +144,7 @@ function render(context)
     pages = ["`$(target_name(context))`" => "index.md"]
     add_bib(context, pages)
     makedocs_kwargs = (;
-        root = dirname(context.output_directory),
+        root = dirname(abspath(context.output_directory)),
         sitename = "InferenceReport",
         format = context.options.writer,
         pages, 
