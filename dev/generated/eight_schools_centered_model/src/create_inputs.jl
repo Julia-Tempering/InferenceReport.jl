@@ -1,6 +1,6 @@
 run(`git clone https://github.com/Julia-Tempering/InferenceReport.jl`)
 cd("InferenceReport.jl")
-run(`git checkout e539427b9a464d46ebccf947d19a9e41e771d6f2`)
+run(`git checkout 6ad41a5fc3a24340ce4761685482359b866b058f`)
 
 using Pkg 
 Pkg.activate(".")
