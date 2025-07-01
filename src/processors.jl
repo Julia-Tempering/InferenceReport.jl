@@ -230,14 +230,20 @@ $SIGNATURES
 Progression of the global communication barrier estimate as 
 a function of the round. 
 """
-function gcb_progress(context) 
+gcb_progress(context) = gcb_progress(context, get_pt(context).shared.tempering)
+gcb_progress(context, tempering::Pigeons.NonReversiblePT) = gcb_progress(context, true)
+function gcb_progress(context, tempering::Pigeons.StabilizedPT)
+    gcb_progress(context, true)
+    gcb_progress(context, false)
+end
+function gcb_progress(context, is_main::Bool)
     final_val = Pigeons.global_barrier(get_pt(context))
-    add_key_value(context, "gcb", final_val)
+    add_key_value(context, "gcb" * (is_main ? "" : "_variational"), final_val)
     pigeons_progress(context; 
-        property = :global_barrier, 
-        title = "GCB estimation progress",
+        property = (is_main ? :global_barrier : :global_barrier_variational), 
+        title = "GCB estimation progress" * (is_main ? "" : " (variational)"),
         url_help = "https://pigeons.run/dev/output-pt/#Global-communication-barrier",
-        description = """
+        description = is_main ? """
             Estimate of the Global Communication Barrier (GCB) 
             as a function of 
             the adaptation round. 
@@ -249,7 +255,15 @@ function gcb_progress(context)
             (the argument `n_chains` in `pigeons()`) to roughly 2Λ.
 
             Last round estimate: ``$final_val``
-            """)
+            """ :
+            """
+            Estimate of the Global Communication Barrier (GCB) 
+            as a function of 
+            the adaptation round for the variational chain.
+
+            Last round estimate: ``$final_val``
+            """
+            )
 end
 
 """ 
@@ -257,23 +271,16 @@ $SIGNATURES
 
 The local communication barrier estimated in the last round. 
 """
-function lcb(context)
-    barrier = get_pt(context).shared.tempering.communication_barriers.localbarrier
-    xs = range(0.0, 1.0, length=100)
-    ys = barrier.(xs)
-    f = Figure()
-    ax = Axis(f[1, 1])
-    lines!(xs, ys)
-    ax.xlabel = "β"
-    ax.ylabel = "λ(β)"
-    name = "local_barrier"
-    file = output_file(context, name, "png")
-    CairoMakie.save(file, f, px_per_unit=2)
-    add_plot(context; 
-        file = "$name.png", 
-        title = "Local communication barrier", 
-        url_help = "https://pigeons.run/dev/output-pt/#Local-communication-barrier",
-        description = """
+lcb(context) = lcb(context, get_pt(context).shared.tempering)
+lcb(context, tempering::Pigeons.NonReversiblePT) = lcb(context, tempering.communication_barriers.localbarrier, true)
+function lcb(context, tempering::Pigeons.StabilizedPT)
+    lcb(context, tempering.fixed_leg.communication_barriers.localbarrier, true)
+    lcb(context, tempering.variational_leg.communication_barriers.localbarrier, false)
+end
+
+function lcb(context, barrier, is_main::Bool)
+    description = is_main ? 
+        """
         When the global communication barrier is large, many chains may 
         be required to obtain tempered restarts.
 
@@ -281,7 +288,26 @@ function lcb(context)
         of a high global communication barrier. For example, if there is a 
         sharp peak close to a reference constructed from the prior, it may 
         be useful to switch to a [variational approximation](https://pigeons.run/dev/variational/#variational-pt).
-        """)
+        """ :
+        """
+        Local communication barrier for the variational leg (ideally  
+        smaller than the non-variational one).
+        """
+    xs = range(0.0, 1.0, length=100)
+    ys = barrier.(xs)
+    f = Figure()
+    ax = Axis(f[1, 1])
+    lines!(xs, ys)
+    ax.xlabel = "β"
+    ax.ylabel = "λ(β)"
+    name = "local_barrier" * (is_main ? "" : "_variational")
+    file = output_file(context, name, "png")
+    CairoMakie.save(file, f, px_per_unit=2)
+    add_plot(context; 
+        file = "$name.png", 
+        title = "Local communication barrier" * (is_main ? "" : " (variational)"), 
+        url_help = "https://pigeons.run/dev/output-pt/#Local-communication-barrier",
+        description)
 end
 
 """
