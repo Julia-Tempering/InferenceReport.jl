@@ -14,7 +14,7 @@
                 target_description = TargetDescription(text = "Description"),
                 reproducibility_command = "toy_mvn_target(2)")
 
-    @test length(context.generated_markdown) == 
+    @test length(context.generated_markdown) - 2 ==    # -2 b/c of variational legs
           length(InferenceReport.default_postprocessors()) - 1 # MPI output
 
 end
