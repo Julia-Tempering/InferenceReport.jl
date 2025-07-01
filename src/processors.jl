@@ -78,7 +78,7 @@ $SIGNATURES
 Table of means and variances. 
 """
 function moments(context)
-    summary = summarize(get_chains(context)) 
+    summary = summarize(get_chains(context); sections=[:parameters, :internals]) 
     add_table(context; 
         table = summary, 
         title = "Moments")
@@ -101,7 +101,7 @@ function trace_plot(context, cumulative)
 
     # from MCMCChains doc: 
     chns = get_chains(context)
-    params = names(chns, :parameters)
+    params = names(chns)
 
     n_chains = length(chains(chns))
     n_samples = length(chns)
@@ -117,7 +117,6 @@ function trace_plot(context, cumulative)
             lines!(ax, 1:n_samples, values; label=string(chain))
         end
 
-        #hideydecorations!(ax; label=false)
         if i < length(params)
             hidexdecorations!(ax; grid=false)
         else
