@@ -8,7 +8,7 @@ add_top_title(context; title) = push!(context.generated_markdown, "# $title")
 """
 $SIGNATURES
 """
-function add_table(context; table, title, url_help = nothing, kw_pretty_table_args...) 
+function add_table(context; table, title, url_help = nothing, description = "", kw_pretty_table_args...) 
     info_link = isnothing(url_help) ? "" : """⏐<a href="$url_help">🔗 Info </a>"""
     
     CSV.write(output_file(context, title, "csv"), table)
@@ -18,6 +18,7 @@ function add_table(context; table, title, url_help = nothing, kw_pretty_table_ar
         title, 
         contents = 
             """
+            $description
             $markdown_table 
 
             ```@raw html
