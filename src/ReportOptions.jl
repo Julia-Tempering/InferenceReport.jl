@@ -78,4 +78,9 @@ $FIELDS
     processed.  
     """
     max_dim::Int = 10
+
+    """
+    Nominal coverage of intervals.
+    """
+    interval_probability::Float64 = 0.95
 end

@@ -18,6 +18,10 @@ using Logging
 import Pigeons: @auto
 using DataFrames
 using DocumenterCitations
+using Statistics
+import MCMCDiagnosticTools
+using Distributions
+using DataFrames
 
 include("TargetDescription.jl")
 include("ReportOptions.jl")
@@ -31,6 +35,7 @@ default_postprocessors() = [
     target_description,
     pair_plot,
     trace_plot, 
+    intervals,
     moments,
     trace_plot_cumulative,    
     mpi_standard_out,

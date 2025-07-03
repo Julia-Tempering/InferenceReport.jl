@@ -49,6 +49,7 @@ function run_examples()
             @reproducible Inputs(;
                 target = Pigeons.stan_funnel(2), 
                 variational = GaussianReference(first_tuning_round = 5),
+                n_chains_variational = 10,
                 n_rounds = 10, 
                 record = [traces; round_trip; record_default()])
         funnel = report_to_docs(
@@ -62,6 +63,7 @@ function run_examples()
             @reproducible Inputs(;
                 target = Pigeons.stan_banana(2), 
                 variational = GaussianReference(first_tuning_round = 5),
+                n_chains_variational = 10,
                 n_rounds = 10, 
                 record = [traces; round_trip; record_default()])
         banana = report_to_docs(
@@ -75,6 +77,7 @@ function run_examples()
             @reproducible Inputs(;
                 target = Pigeons.stan_eight_schools(), 
                 variational = GaussianReference(first_tuning_round = 5),
+                n_chains_variational = 10,
                 n_rounds = 10, 
                 record = [traces; round_trip; record_default()])
         schools = report_to_docs(

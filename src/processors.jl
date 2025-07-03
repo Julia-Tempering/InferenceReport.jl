@@ -77,12 +77,83 @@ $SIGNATURES
 
 Table of means and variances. 
 """
-function moments(context)
-    summary = summarize(get_chains(context); sections=[:parameters, :internals]) 
+moments(context) =  
     add_table(context; 
-        table = summary, 
+        table = summarize(get_chains(context); sections=[:parameters, :internals]), 
         title = "Moments")
+
+"""
+$SIGNATURES 
+
+Table of credible intervals. 
+"""       
+intervals(context) = 
+    add_table(context; 
+        table = intervals(get_chains(context), context.options.interval_probability),
+        title = "Intervals", 
+        url_help = "https://xkcd.com/2110/",
+        description = """
+        Nominal coverage requested: $(context.options.interval_probability) 
+        (change via `interval_probability` option which can be passed to `report()`). 
+
+        The **credible** interval `(naive_left, naive_right)` is constructed using the quantiles 
+        of the posterior distribution. It is naive in the sense that it does not take 
+        into account additional uncertainty brought by the Monte Carlo approximation. 
+
+        The radius of a Monte Carlo **confidence interval** with the same nominal coverage, 
+        constructed on each of the end points of the naive interval is shown in 
+        `mcci_radius_left` and `mcci_radius_left`. 
+
+        Finally, `(fused_left, fused_right)` is obtained by merging the two sources of 
+        uncertainty: statistical, captured by the credible interval, and computational, 
+        captured by the confidence intervals on the end points. 
+        """)
+
+"""
+$SIGNATURES  
+"""  
+function intervals(chain, probability)
+    @assert 0 < probability < 1 
+
+    result = DataFrame(
+        parameters = String[],
+        naive_left = Float64[],
+        naive_right = Float64[],
+        mcci_radius_left = Float64[],
+        mcci_radius_right = Float64[],
+        fused_left = Float64[],
+        fused_right = Float64[]
+    )
+
+    two_tails = 1.0 - probability 
+    one_tail = two_tails/2.0
+    quantiles = [one_tail, 1.0 - one_tail]
+
+    # for Monte Carlo *Confidence* interval around posterior quantiles, we will need this:
+    z_score = quantile(Normal(), 1.0 - one_tail)
+
+    params = names(chain)
+    for param in params 
+        cur_trace = vec(chain[:, param, :])
+        naives = quantile(cur_trace, quantiles)
+        ci_radii = z_score * [quantile_mcse(cur_trace, q) for q in quantiles] 
+        fused = (naives[1] - ci_radii[1], naives[2] + ci_radii[2]) 
+        push!(result, (;
+                parameters = string(param),
+                naive_left = naives[1],
+                naive_right = naives[2],
+                mcci_radius_left = ci_radii[1],
+                mcci_radius_right = ci_radii[2],  
+                fused_left = fused[1],
+                fused_right = fused[2],  
+            )
+        )
+    end
+    return result
 end
+
+quantile_mcse(trace, q) = MCMCDiagnosticTools.mcse(trace; kind = Base.Fix2(Statistics.quantile, q))
+
 
 """
 $SIGNATURES 
