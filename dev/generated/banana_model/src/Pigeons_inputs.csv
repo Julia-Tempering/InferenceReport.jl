@@ -6,9 +6,9 @@ record,"Function[Pigeons.traces, Pigeons.round_trip, Pigeons.log_sum_ratio, Pige
 multithreaded,false
 show_report,true
 n_chains,10
-variational,"GaussianReference(Dict{Symbol, Any}(:singleton_variable => [0.13418388775069579, 1.4108210862807629, 1.4217047956360909]), Dict{Symbol, Any}(:singleton_variable => [1.1847353799493323, 1.5083163212247552, 1.5051100895932568]), 5)"
+variational,"GaussianReference(Dict{Symbol, Any}(:singleton_variable => [-0.10358770214856587, 2.011651654110387, 2.0095743386153906]), Dict{Symbol, Any}(:singleton_variable => [1.4164799497692833, 2.0919854175342847, 2.0956166570083674]), 5)"
 explorer,nothing
-n_chains_variational,0
+n_chains_variational,10
 target,StanLogPotential(banana_model)
 n_rounds,10
 exec_folder,nothing

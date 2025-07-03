@@ -1,0 +1,3 @@
+round,n_scans,n_tempered_restarts,global_barrier,global_barrier_variational,last_round_max_time,last_round_max_allocation,stepping_stone
+1,2,,0.6092922716142112,,3.0346e-5,9888.0,-1.6790837511173469
+2,4,,1.2779245967764699,,5.7167e-5,15744.0,-1.8635721386724615
