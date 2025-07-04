@@ -308,7 +308,8 @@ function gcb_progress(context, tempering::Pigeons.StabilizedPT)
     gcb_progress(context, false)
 end
 function gcb_progress(context, is_main::Bool)
-    final_val = Pigeons.global_barrier(get_pt(context))
+    pt = get_pt(context)
+    final_val = is_main ? Pigeons.global_barrier(pt) : Pigeons.global_barrier_variational(pt.shared.tempering)
     add_key_value(context, "gcb" * (is_main ? "" : "_variational"), final_val)
     pigeons_progress(context; 
         property = (is_main ? :global_barrier : :global_barrier_variational), 
