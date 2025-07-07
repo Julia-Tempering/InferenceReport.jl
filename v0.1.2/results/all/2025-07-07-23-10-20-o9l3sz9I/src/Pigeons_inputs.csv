@@ -1,0 +1,17 @@
+first,second
+extended_traces,false
+checked_round,0
+extractor,nothing
+record,[Pigeons.traces]
+multithreaded,false
+show_report,true
+n_chains,10
+variational,nothing
+explorer,nothing
+n_chains_variational,0
+target,"Pigeons.ScaledPrecisionNormalPath(1.0, 10.0, 1)"
+n_rounds,4
+exec_folder,nothing
+reference,nothing
+checkpoint,false
+seed,1
