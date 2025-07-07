@@ -33,12 +33,19 @@ Inference(result::Result{PT}, max_dim::Int) = Inference(Pigeons.load(result), ma
 Inference(algorithm, max_dim::Int)      = Inference(algorithm, build_chains(algorithm, max_dim))
 Inference(chains::Chains, max_dim::Int) = Inference(nothing,   truncate_if_needed(chains, max_dim))
 
-build_chains(algorithm, max_dim) = 
+function build_chains(algorithm, max_dim)
+    check(algorithm)
     try 
         truncate_if_needed(Chains(algorithm), max_dim)
     catch e 
         println("Could not build traces: $e")
         nothing
+    end
+end
+check(algorithm) = nothing 
+check(pt::PT) = 
+    if pt.inputs.extended_traces 
+        error("Extended trace not yet supported. Please file an Issue if you need it.")
     end
 
 function truncate_if_needed(chain, max_dim)
