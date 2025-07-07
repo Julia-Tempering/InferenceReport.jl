@@ -75,12 +75,36 @@ end
 """
 $SIGNATURES 
 
-Table of means and variances. 
+Table of posterior means, variances, MCSE, ESS, R-hat. 
 """
 moments(context) =  
     add_table(context; 
-        table = summarize(get_chains(context); sections=[:parameters, :internals]), 
-        title = "Moments")
+        table = safe_summarystats(get_chains(context); sections=[:parameters, :internals]), 
+        title = "Moments, MCSE, ESS, etc", 
+        description = """
+        The ESS/MCSE/Rhat estimators use `InferenceReports.safe_summarystats(chains)`, which are based on 
+        the truncated autocorrelation estimator (Geyer, 1992, sec 3.3) computed with FFT 
+        with *no lag limit*.  
+        As a result, these estimators should be 
+        safe to use in the low relative ESS regime, in contrast to the defaults used in MCMCChains, 
+        [which lead to catastrophic ESS over-estimation in that regime](https://ubc-stat-ml.github.io/ess-bench/report.html).
+        """) 
+
+safe_summarystats(
+    chains::Chains;
+    sections = MCMCChains._default_sections(chains),
+    append_chains::Bool = true,
+    name = "Safe Summary Statistics",
+    kwargs..., ) = 
+        MCMCChains.summarystats(
+            chains;
+            sections,
+            append_chains,
+            autocov_method = FFTAutocovMethod(), # <- important to make sure running time scales correctly
+            maxlag = typemax(Int), # <- key to safe ESS computation in the low relative ESS regime
+            name,
+            kwargs...,
+        )
 
 """
 $SIGNATURES 
@@ -185,7 +209,12 @@ function trace_plot(context, cumulative)
         for chain in 1:n_chains
             cur_trace = chns[:, param, chain]
             values = cumulative ? cumsum(cur_trace) ./ collect(1:length(cur_trace)) : cur_trace
-            lines!(ax, 1:n_samples, values; label=string(chain))
+            if cumulative 
+                lines!(ax, 1:n_samples, values; label=string(chain))
+            else
+                lines!(ax, 1:n_samples, values; label=string(chain), alpha = 0.4)
+                scatter!(ax, 1:n_samples, values)
+            end
         end
 
         if i < length(params)
