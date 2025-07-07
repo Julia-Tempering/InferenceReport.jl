@@ -209,7 +209,12 @@ function trace_plot(context, cumulative)
         for chain in 1:n_chains
             cur_trace = chns[:, param, chain]
             values = cumulative ? cumsum(cur_trace) ./ collect(1:length(cur_trace)) : cur_trace
-            lines!(ax, 1:n_samples, values; label=string(chain))
+            if cumulative 
+                lines!(ax, 1:n_samples, values; label=string(chain))
+            else
+                lines!(ax, 1:n_samples, values; label=string(chain), alpha = 0.4)
+                scatter!(ax, 1:n_samples, values)
+            end
         end
 
         if i < length(params)
