@@ -1,7 +1,7 @@
 name = "InferenceReport"
 uuid = "e5554034-be14-491c-aa1c-9e5f4a9f7142"
 authors = ["Alexandre Bouchard-Côté <bouchard@stat.ubc.ca>, Miguel Biron-Lattes, William Thompson, Lucas Wong"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
