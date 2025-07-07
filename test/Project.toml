@@ -1,7 +1,10 @@
 [deps]
 BridgeStan = "c88b6f0a-829e-4b0b-94b7-f06ab5908f5a"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DynamicPPL = "366bfd00-2699-11ea-058f-f148b4cae6d8"
 InferenceReport = "e5554034-be14-491c-aa1c-9e5f4a9f7142"
 MCMCChains = "c7f686f2-ff18-58e9-bc7b-31028e88f75d"
 Pigeons = "0eb8d820-af6a-4919-95ae-11206f830c31"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

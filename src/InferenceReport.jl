@@ -21,7 +21,8 @@ using DocumenterCitations
 using Statistics
 import MCMCDiagnosticTools
 using Distributions
-using DataFrames
+using DataFrames 
+using FFTW 
 
 include("TargetDescription.jl")
 include("ReportOptions.jl")
