@@ -17,6 +17,7 @@ using Documenter
 using DocStringExtensions
 import InferenceReport: as_doc_page, report_to_docs, headless
 
+
 # Delete old generated pages
 generated = "$script_dir/src/generated"
 try 
